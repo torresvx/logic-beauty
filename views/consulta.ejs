@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Consultar - Logic Beauty</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background: #f4f4f4; text-align: center; margin: 0; }
+        header { background-image: url("/landing img.jpg"); background-size: cover; padding: 40px; }
+        h1 { font-family: 'Great Vibes', cursive; font-size: 60px; color: #ff6f91; margin: 0; }
+        .card { background: white; padding: 15px; margin: 15px auto; border-radius: 10px; text-align: left; width: 90%; max-width: 550px; border-left: 6px solid #ccc; transition: 0.4s; }
+
+        .card-destaque { 
+            border-left: 8px solid #ff6f91 !important; 
+            background: #fff0f3 !important;
+            animation: pulse-effect 1.5s infinite;
+        }
+        @keyframes pulse-effect {
+            0% { box-shadow: 0 0 0 0 rgba(255, 111, 145, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 111, 145, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 111, 145, 0); }
+        }
+        input { padding: 12px; border-radius: 8px; border: 1px solid #ddd; width: 60%; }
+        button { padding: 12px; background: #ff6f91; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; }
+    </style>
+</head>
+<body>
+    <header><h1>Logic Beauty</h1></header>
+    <div style="margin-top: 30px;">
+        <form action="/consulta" method="GET">
+            <input name="nome" type="text" placeholder="Nome para destacar..." value="<%= busca %>">
+            <button type="submit">Localizar</button>
+        </form>
+    </div>
+
+    <% agendamentos.forEach(row => { %>
+        <% let destaque = (busca != "" && row.nome.toLowerCase().includes(busca.toLowerCase())) ? "card-destaque" : ""; %>
+        <div class="card <%= destaque %>">
+            <div><i class="fa-solid fa-user" style="color:#ff6f91;"></i> <strong>Cliente:</strong> <%= row.nome %></div>
+            <div><i class="fa-solid fa-calendar-day" style="color:#ff6f91;"></i> <strong>Data:</strong> <%= new Date(row.data).toLocaleDateString('pt-BR') %></div>
+            <div><i class="fa-solid fa-hand-sparkles" style="color:#ff6f91;"></i> <strong>Serviços:</strong> <%= row.procedimento %></div>
+        </div>
+    <% }) %>
+    <a href="/" style="display:block; margin-top:20px; color:#888; text-decoration:none;">Voltar</a>
+</body>
+</html>

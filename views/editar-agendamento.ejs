@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Horário - Logic Beauty</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+
+        body { font-family: 'Poppins', sans-serif; background: #f4f4f4; text-align: center; margin: 0; }
+        .container { max-width: 400px; margin: 50px auto; background: white; padding: 30px; border-radius: 15px; border-top: 5px solid #ff6f91; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .input-box { text-align: left; margin-bottom: 15px; }
+        label { font-weight: 600; color: #ff6f91; display: block; margin-bottom: 5px; }
+        input[type="date"], input[type="time"] { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; }
+        
+        .checkbox-group { background: #fff0f3; padding: 15px; border-radius: 10px; border: 1px solid #ddd; max-height: 200px; overflow-y: auto; text-align: left; }
+        .check-item { display: block; margin-bottom: 8px; font-size: 14px; cursor: pointer; }
+        .check-item input { width: auto; margin-right: 10px; accent-color: #ff6f91; }
+
+        .btn-salvar { background: #ff6f91; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn-salvar:hover { background: #ff4d73; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Editar Agendamento ✨</h2>
+        <form action="/atualizar" method="POST">
+            <input type="hidden" name="id" value="<%= agendamento.id %>">
+
+            <div class="input-box">
+                <label>Data:</label>
+                <input type="date" name="data" value="<%= new Date(agendamento.data).toISOString().split('T')[0] %>" required>
+            </div>
+
+            <div class="input-box">
+                <label>Hora:</label>
+                <input type="time" name="hora" value="<%= agendamento.hora %>" required>
+            </div>
+
+            <div class="input-box">
+                <label>Procedimentos:</label>
+                <div class="checkbox-group">
+                    <% 
+                        const servicos = ["Corte de cabelo", "Escova", "Selagem", "Manicure", "Progressiva", "Pedicure", "Hidratação", "Pinturas", "Retoques"];
+                        const selecionados = agendamento.procedimento.split(", "); 
+                    %>
+                    <% servicos.forEach(s => { %>
+                        <label class="check-item">
+                            <input type="checkbox" name="procedimento[]" value="<%= s %>" 
+                            <%= selecionados.includes(s) ? 'checked' : '' %>> 
+                            <%= s %>
+                        </label>
+                    <% }) %>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-salvar">Salvar Alterações</button>
+        </form>
+        <br>
+        <a href="/meus-agendamentos" style="color: #888; text-decoration: none; font-size: 14px;">Cancelar e voltar</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Espaço Carol- Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        ::-webkit-scrollbar { width: 12px; }
+        ::-webkit-scrollbar-track { background: #f4f4f4; }
+        ::-webkit-scrollbar-thumb { background-color: #ff6f91; border-radius: 10px; border: 3px solid #f4f4f4; }
+        ::-webkit-scrollbar-thumb:hover { background-color: #ff4d73; }
+        * { scrollbar-width: thin; scrollbar-color: #ff6f91 #f4f4f4; }
+
+        body { font-family: 'Poppins', sans-serif; background: #f4f4f4; margin: 0; text-align: center; }
+        
+        header { 
+            position: relative; 
+            background-image: url("/landing img.jpg");
+            background-size: cover; 
+            background-position: center; 
+            padding: 80px 20px;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+        }
+
+        .header-logo {
+            position: absolute;
+            top: 20px; 
+            left: 20px;
+            max-width: 110px; 
+            height: auto; 
+            border: none; 
+            z-index: 10; 
+        }
+
+        h1 { font-family: 'Great Vibes', cursive; font-size: 80px; margin: 0; color: #ff6f91; }
+        header p { font-size: 18px; font-weight: 600; color: #333; }
+
+        nav { background: white; padding: 15px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        nav a { text-decoration: none; color: #333; margin: 0 20px; font-weight: 600; transition: 0.3s; cursor: pointer; }
+        nav a:hover { color: #ff6f91; }
+
+        section { display: none; padding: 60px 20px; animation: fadeIn 0.5s ease; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .container-form { background: white; max-width: 450px; margin: 0 auto; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 5px solid #ff6f91; }
+        .input-box { margin-bottom: 20px; text-align: left; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #ff6f91; }
+        
+        input[type="text"], input[type="date"], input[type="time"] {
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; outline: none;
+        }
+
+        .checkbox-group { background: #fff0f3; padding: 15px; border-radius: 10px; border: 1px solid #ddd; max-height: 200px; overflow-y: auto; text-align: left; }
+        .check-item { display: block; margin-bottom: 10px; cursor: pointer; font-size: 14px; }
+        .check-item input { margin-right: 10px; accent-color: #ff6f91; width: auto; }
+
+        .btn-acao { background: #ff6f91; color: white; border: none; padding: 15px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; transition: 0.3s; }
+        .btn-acao:hover { background: #ff4d73; transform: translateY(-2px); }
+
+        footer { padding: 40px; color: #888; font-size: 12px; }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <img src="logocarol.png" alt="Logic Beauty Logo" class="header-logo">
+        <h1>Espaço Carol</h1>
+        <p>Realçando sua beleza com lógica e carinho.</p>
+    </header>
+
+    <nav>
+        <a onclick="mostrar('home')">Início</a>
+        <a href="/login">Login / Cadastro</a>
+        <a onclick="mostrar('agendar')">Agendar</a>
+        <a href="/consulta">Consultar</a>
+    </nav>
+
+    <section id="home" class="active">
+        <h2 style="color: #ff6f91;">Bem-vinda ao seu momento!</h2>
+        <img src="/landing img.jpg" alt="Salão" style="width: 100%; max-width: 500px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+    </section>
+
+    <section id="agendar">
+        <div class="container-form">
+            <h2>Marcar Horário</h2>
+            <form action="/agendar" method="POST">
+                <div class="input-box">
+                    <label>Seu Nome:</label>
+                    <input type="text" name="nome" placeholder="Digite seu nome" required>
+                </div>
+                <div class="input-box">
+                    <label>Data:</label>
+                    <input type="date" name="data" required>
+                </div>
+                <div class="input-box">
+                    <label>Hora:</label>
+                    <input type="time" name="hora" required>
+                </div>
+                <div class="input-box">
+                    <label>Procedimentos:</label>
+                    <div class="checkbox-group">
+                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Corte de cabelo"> Corte de cabelo</label>
+                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Escova"> Escova</label>
+                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Selagem"> Selagem</label>
+                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Manicure"> Manicure</label>
+                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Progressiva"> Progressiva</label>
+                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Pedicure"> Pedicure</label>
+                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Hidratação"> Hidratação</label>
+                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Pinturas"> Pinturas</label>
+                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Retoques"> Retoques</label>
+                    </div>
+                </div>
+                <button type="submit" class="btn-acao">Confirmar Agendamento</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="consulta">
+        <div class="container-form">
+            <h2>Buscar Agendamento</h2>
+            <form action="/consulta" method="GET">
+                <input type="text" name="nome" placeholder="Nome cadastrado" required style="margin-bottom: 20px; width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px;">
+                <button type="submit" class="btn-acao">Buscar</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        &copy; 2026 Logic Beauty - FATEC Zona Sul
+    </footer>
+
+    <script>
+        function mostrar(id) {
+            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+    </script>
+
+</body>
+</html>
