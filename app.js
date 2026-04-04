@@ -9,32 +9,31 @@ require('dotenv').config();
 const app = express();
 
 const db = mysql.createConnection({
-    host: process.env.DB_HOST || 'gateway01.us-east-1.prod.aws.tidbcloud.com',
-    user: process.env.DB_USER || '3UCq6evf31n5FLN.root',
-    password: process.env.DB_PASSWORD || 'ORs5jUCM8PMzN31l',
-    database: process.env.DB_NAME || 'logic_beauty',
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     port: process.env.DB_PORT || 4000,
     ssl: { minVersion: 'TLSv1.2', rejectUnauthorized: true }
 });
 
 db.connect((err) => {
     if (err) {
-        console.error('❌ Erro de conexão com o banco:', err.message);
+        console.error('❌ Erro de conexão com o TiDB:', err.message);
         return;
     }
-    console.log('✅ Logic Beauty conectado ao TiDB Cloud! ✨');
+    console.log('✅ Conectado ao TiDB Cloud com sucesso! ✨');
 });
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views')); 
 app.use(express.static(path.join(__dirname, 'public'))); 
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true })); 
 app.use(session({
-    secret: 'segredo-fatec-logic-beauty',
+    secret: 'segredo-logic-beauty-fatec',
     resave: false,
     saveUninitialized: true
 }));
-
 
 app.get('/', (req, res) => {
     res.render('index');
@@ -51,9 +50,9 @@ app.post('/cadastrar', (req, res) => {
     db.query(sql, [nome, usuario, senha, telefone, data_nascimento], (err) => {
         if (err) {
             console.error(err);
-            return res.render('login', { msg: "❌ Erro no cadastro. Verifique se o e-mail já existe." });
+            return res.render('login', { msg: "❌ Erro no cadastro. E-mail já existe?" });
         }
-        res.render('login', { msg: "✨ Conta criada com sucesso! Faça login." });
+        res.render('login', { msg: "✨ Conta criada! Agora faça o login." });
     });
 });
 
@@ -63,13 +62,31 @@ app.post('/login', (req, res) => {
 
     db.query(sql, [usuario, senha], (err, results) => {
         if (err) throw err;
-        if (results.length > 0) {
+        if (results && results.length > 0) {
             req.session.user_id = results[0].id_usuarios;
             req.session.user_nome = results[0].nome;
             res.redirect('/meus-agendamentos');
         } else {
             res.render('login', { msg: "⚠️ E-mail ou senha incorretos." });
         }
+    });
+});
+
+app.post('/agendar', (req, res) => {
+    if (!req.session.user_id) {
+        return res.render('login', { msg: "Você precisa logar para agendar!" });
+    }
+
+    const { data, hora, procedimento } = req.body;
+    const data_hora = `${data} ${hora}`;
+    const sql = "INSERT INTO agendamento (usuarios_id_usuarios, servicos_id_servico, data_hora_agendamento, status_agendamento) VALUES (?, 1, ?, 'pendente')";
+
+    db.query(sql, [req.session.user_id, data_hora], (err) => {
+        if (err) {
+            console.error(err);
+            return res.send("Erro ao processar agendamento.");
+        }
+        res.redirect('/meus-agendamentos');
     });
 });
 
@@ -86,52 +103,12 @@ app.get('/meus-agendamentos', (req, res) => {
     });
 });
 
-app.get('/consulta', (req, res) => {
-    const busca = req.query.nome || "";
-    const sql = `SELECT u.nome, a.data_hora_agendamento, a.status_agendamento 
-                 FROM usuarios u 
-                 JOIN agendamento a ON u.id_usuarios = a.usuarios_id_usuarios`;
-
-    db.query(sql, (err, results) => {
-        if (err) throw err;
-        res.render('consulta', { agendamentos: results, busca: busca });
-    });
-});
-
 app.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
 });
 
-cron.schedule('0 9 * * *', () => {
-    const sql = `SELECT nome, usuario_email FROM usuarios 
-                 WHERE DATE_FORMAT(data_nascimento, '%m-%d') = DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL 3 DAY), '%m-%d')`;
-
-    db.query(sql, (err, results) => {
-        if (err) return console.error('Erro na automação:', err);
-
-        if (results.length > 0) {
-            let transporter = nodemailer.createTransport({
-                service: 'gmail',
-                auth: {
-                    user: 'seu-email@gmail.com', 
-                    pass: 'sua-senha-app'       
-                }
-            });
-
-            results.forEach(user => {
-                transporter.sendMail({
-                    from: '"Logic Beauty 💅"',
-                    to: user.usuario_email,
-                    subject: "Seu presente está chegando! 🎁",
-                    text: `Olá ${user.nome}! Vimos que seu aniversário é em 3 dias! Use o cupom NIVER30 e ganhe 30% de desconto.`
-                });
-            });
-            console.log('📧 E-mails de marketing enviados com sucesso!');
-        }
-    });
-});
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`🚀 Logic Beauty rodando em: http://localhost:${PORT}`);
+    console.log(`🚀 Site online em: http://localhost:${PORT}`);
 });

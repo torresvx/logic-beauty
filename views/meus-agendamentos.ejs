@@ -2,34 +2,93 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Meus Agendamentos</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <title>Meus Agendamentos - Espaço Carol</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Poppins', sans-serif; background: #f4f4f4; text-align: center; }
-        .container { max-width: 500px; margin: 50px auto; background: white; padding: 30px; border-radius: 15px; border-top: 5px solid #ff6f91; }
-        .card { background: #fff0f3; padding: 15px; margin-bottom: 15px; border-radius: 8px; text-align: left; border-left: 5px solid #ff6f91; }
+        :root {
+            --lilas-pastel: #E0BBE4;
+            --roxo-pastel-medio: #D1B3FF;
+            --roxo-pastel-escuro: #B38BFF;
+            --off-white: #FDFDFD;
+            --cinza-texto: #555;
+            --branco-puro: #FFFFFF;
+        }
+
+        body { font-family: 'Poppins', sans-serif; background: var(--off-white); margin: 0; color: var(--cinza-texto); text-align: center; }
+
+        header {
+            position: relative;
+            background-image: url("fundo.jpg");
+            background-size: cover;
+            background-position: center;
+            padding: 60px 20px;
+            border-bottom: 2px solid var(--lilas-pastel);
+        }
+
+        header::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(255, 255, 255, 0.7); z-index: 1;
+        }
+
+        header > * { position: relative; z-index: 2; }
+
+        h1 {
+            font-family: 'Playfair Display', serif; font-size: 50px; font-style: italic;
+            color: var(--roxo-pastel-escuro); margin: 0;
+        }
+
+        .container { max-width: 800px; margin: 40px auto; padding: 20px; }
+
+        .card-agendamento {
+            background: var(--branco-puro);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(224, 187, 228, 0.2);
+            border-left: 5px solid var(--roxo-pastel-medio);
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info h3 { margin: 0; color: var(--roxo-pastel-escuro); }
+        .info p { margin: 5px 0; color: #777; }
+
+        .btn-acao {
+            text-decoration: none; padding: 10px 15px; border-radius: 8px;
+            font-size: 14px; font-weight: 600; transition: 0.3s;
+        }
+
+        .btn-editar { background: var(--lilas-pastel); color: #555; margin-right: 10px; }
+        .btn-excluir { background: #ffb3b3; color: #a00; }
+
+        .btn-acao:hover { opacity: 0.8; transform: translateY(-2px); }
+
+        .btn-logout { color: var(--roxo-pastel-escuro); text-decoration: none; font-weight: 600; display: block; margin-top: 30px; }
     </style>
 </head>
 <body>
+    <header>
+        <h1>Meus Horários</h1>
+    </header>
+
     <div class="container">
-        <h1>Olá, <%= nome_logado %>! ✨</h1>
-        <a href="/logout" style="color: #ff6f91; text-decoration: none; font-weight: 600;">Sair da conta</a>
-
-        <h3 style="margin-top: 30px;">Seus Próximos Horários:</h3>
-
-        <% if(agendamentos.length > 0) { %>
-            <% agendamentos.forEach(row => { %>
-                <div class="card">
-                    <strong>Data:</strong> <%= new Date(row.data).toLocaleDateString('pt-BR') %><br>
-                    <strong>Hora:</strong> <%= row.hora %><br>
-                    <strong>Serviços:</strong> <%= row.procedimento %>
+        <% agendamentos.forEach(a => { %>
+            <div class="card-agendamento">
+                <div class="info">
+                    <h3><%= a.procedimento %></h3>
+                    <p><i class="fa fa-calendar"></i> <%= a.data %> às <%= a.hora %></p>
                 </div>
-            <% }) %>
-        <% } else { %>
-            <p>Você ainda não tem agendamentos marcados.</p>
-        <% } %>
-
-        <a href="/" style="display: block; margin-top: 20px; color: #888;">Voltar ao Início</a>
+                <div>
+                    <a href="/editar/<%= a.id %>" class="btn-acao btn-editar">Editar</a>
+                    <a href="/excluir/<%= a.id %>" class="btn-acao btn-excluir" onclick="return confirm('Deseja cancelar?')">Cancelar</a>
+                </div>
+            </div>
+        <% }) %>
+        
+        <a href="/logout" class="btn-logout"><i class="fa fa-sign-out-alt"></i> Sair da conta</a>
     </div>
 </body>
 </html>

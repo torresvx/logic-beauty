@@ -1,8 +1,7 @@
--- Garante que o banco existe
+
 CREATE DATABASE IF NOT EXISTS logic_beauty;
 USE logic_beauty;
 
--- Limpa tudo para não dar erro de "Table already exists"
 DROP TABLE IF EXISTS fidelidade_pontos;
 DROP TABLE IF EXISTS agendamento;
 DROP TABLE IF EXISTS usuarios;
@@ -38,7 +37,7 @@ CREATE TABLE agendamento (
 
 CREATE TABLE fidelidade_pontos (
   id_fidelidade INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  usuarios_id_usuarios INT NOT NULL, -- RESOLVE O ERRO DO SEU PRINT!
+  usuarios_id_usuarios INT NOT NULL, 
   pontos_acumulados_fidelidade DECIMAL(10,2) NOT NULL DEFAULT 0,
   FOREIGN KEY (usuarios_id_usuarios) REFERENCES usuarios(id_usuarios)
 );

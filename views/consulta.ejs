@@ -2,46 +2,75 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Consultar - Logic Beauty</title>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Consulta - Espaço Carol</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Poppins', sans-serif; background: #f4f4f4; text-align: center; margin: 0; }
-        header { background-image: url("/landing img.jpg"); background-size: cover; padding: 40px; }
-        h1 { font-family: 'Great Vibes', cursive; font-size: 60px; color: #ff6f91; margin: 0; }
-        .card { background: white; padding: 15px; margin: 15px auto; border-radius: 10px; text-align: left; width: 90%; max-width: 550px; border-left: 6px solid #ccc; transition: 0.4s; }
+        :root {
+            --lilas-pastel: #E0BBE4;
+            --roxo-pastel-medio: #D1B3FF;
+            --roxo-pastel-escuro: #B38BFF;
+            --off-white: #FDFDFD;
+            --branco-puro: #FFFFFF;
+        }
 
-        .card-destaque { 
-            border-left: 8px solid #ff6f91 !important; 
-            background: #fff0f3 !important;
-            animation: pulse-effect 1.5s infinite;
+        body { font-family: 'Poppins', sans-serif; background: var(--off-white); margin: 0; text-align: center; }
+
+        header {
+            position: relative; background-image: url("fundo.jpg");
+            background-size: cover; background-position: center;
+            padding: 80px 20px; border-bottom: 2px solid var(--lilas-pastel);
         }
-        @keyframes pulse-effect {
-            0% { box-shadow: 0 0 0 0 rgba(255, 111, 145, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(255, 111, 145, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 111, 145, 0); }
-        }
-        input { padding: 12px; border-radius: 8px; border: 1px solid #ddd; width: 60%; }
-        button { padding: 12px; background: #ff6f91; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; }
+
+        header::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.7); z-index: 1; }
+        header > * { position: relative; z-index: 2; }
+
+        h1 { font-family: 'Playfair Display', serif; font-size: 55px; font-style: italic; color: var(--roxo-pastel-escuro); }
+
+        .search-box { margin: 40px auto; max-width: 500px; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+
+        input { width: 100%; padding: 15px; border: 1.5px solid #eee; border-radius: 12px; outline: none; margin-bottom: 15px; box-sizing: border-box; }
+        
+        .btn-busca { background: var(--roxo-pastel-medio); color: white; border: none; padding: 15px 30px; border-radius: 12px; cursor: pointer; font-weight: 700; width: 100%; transition: 0.3s; }
+        .btn-busca:hover { background: var(--roxo-pastel-escuro); }
+
+        table { width: 90%; max-width: 1000px; margin: 20px auto; background: white; border-collapse: collapse; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        th { background: var(--lilas-pastel); color: #555; padding: 15px; }
+        td { padding: 15px; border-bottom: 1px solid #eee; }
+        .destaque { background-color: #fff4ff; font-weight: bold; }
     </style>
 </head>
 <body>
-    <header><h1>Logic Beauty</h1></header>
-    <div style="margin-top: 30px;">
+    <header>
+        <h1>Consulta de Agendamentos</h1>
+    </header>
+
+    <div class="search-box">
         <form action="/consulta" method="GET">
-            <input name="nome" type="text" placeholder="Nome para destacar..." value="<%= busca %>">
-            <button type="submit">Localizar</button>
+            <input type="text" name="cliente" placeholder="Nome da cliente para destacar...">
+            <button type="submit" class="btn-busca">Buscar/Atualizar</button>
         </form>
     </div>
 
-    <% agendamentos.forEach(row => { %>
-        <% let destaque = (busca != "" && row.nome.toLowerCase().includes(busca.toLowerCase())) ? "card-destaque" : ""; %>
-        <div class="card <%= destaque %>">
-            <div><i class="fa-solid fa-user" style="color:#ff6f91;"></i> <strong>Cliente:</strong> <%= row.nome %></div>
-            <div><i class="fa-solid fa-calendar-day" style="color:#ff6f91;"></i> <strong>Data:</strong> <%= new Date(row.data).toLocaleDateString('pt-BR') %></div>
-            <div><i class="fa-solid fa-hand-sparkles" style="color:#ff6f91;"></i> <strong>Serviços:</strong> <%= row.procedimento %></div>
-        </div>
-    <% }) %>
-    <a href="/" style="display:block; margin-top:20px; color:#888; text-decoration:none;">Voltar</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Procedimento</th>
+                <th>Data</th>
+                <th>Hora</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% agendamentos.forEach(a => { %>
+                <tr class="<%= (clienteBusca && a.nome.toLowerCase().includes(clienteBusca.toLowerCase())) ? 'destaque' : '' %>">
+                    <td><%= a.nome %></td>
+                    <td><%= a.procedimento %></td>
+                    <td><%= a.data %></td>
+                    <td><%= a.hora %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
 </body>
 </html>

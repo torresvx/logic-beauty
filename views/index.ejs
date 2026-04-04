@@ -1,145 +1,331 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
-    <title>Espaço Carol- Home</title>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espaço Carol - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        ::-webkit-scrollbar { width: 12px; }
-        ::-webkit-scrollbar-track { background: #f4f4f4; }
-        ::-webkit-scrollbar-thumb { background-color: #ff6f91; border-radius: 10px; border: 3px solid #f4f4f4; }
-        ::-webkit-scrollbar-thumb:hover { background-color: #ff4d73; }
-        * { scrollbar-width: thin; scrollbar-color: #ff6f91 #f4f4f4; }
+  :root {
+            --lilas-pastel: #E0BBE4;
+            --roxo-pastel-medio: #D1B3FF;
+      --roxo-pastel-escuro: #B38BFF;
+            --off-white: #FDFDFD; 
+            --cinza-texto: #555;
+            --branco-puro: #FFFFFF;
+        }
 
-        body { font-family: 'Poppins', sans-serif; background: #f4f4f4; margin: 0; text-align: center; }
+  ::-webkit-scrollbar { width: 10px;
+        }
+  ::-webkit-scrollbar-track { background: var(--off-white);
+        }
+  ::-webkit-scrollbar-thumb { background-color: var(--roxo-pastel-medio); border-radius: 10px; border: 2px solid var(--off-white);
+        }
+  ::-webkit-scrollbar-thumb:hover { background-color: var(--roxo-pastel-escuro);
+        }
+
+        body { 
+      font-family: 'Poppins', sans-serif;
+            background: var(--off-white); 
+            margin: 0; 
+            color: var(--cinza-texto); 
+            text-align: center;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+  }
         
         header { 
-            position: relative; 
-            background-image: url("/landing img.jpg");
-            background-size: cover; 
-            background-position: center; 
-            padding: 80px 20px;
-            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+            position: relative;
+      background-image: url("fundo.jpg"); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; 
+            padding: 120px 20px;
+            color: var(--branco-puro);
+  }
+
+        header::after {
+            content: '';
+      position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(74, 20, 140, 0.3); 
+            z-index: 1;
+  }
+
+  header > * { position: relative; z-index: 2;
         }
 
         .header-logo {
-            position: absolute;
-            top: 20px; 
+      position: absolute;
+            top: 20px;
             left: 20px;
-            max-width: 110px; 
-            height: auto; 
-            border: none; 
-            z-index: 10; 
-        }
+            max-width: 100px;
+            height: auto;
+            z-index: 10;
+            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.3));
+  }
 
-        h1 { font-family: 'Great Vibes', cursive; font-size: 80px; margin: 0; color: #ff6f91; }
-        header p { font-size: 18px; font-weight: 600; color: #333; }
+        h1 { 
+      font-family: 'Playfair Display', serif;
+            font-size: 85px; 
+            font-weight: 600; 
+            font-style: italic;
+            margin: 0; 
+            color: var(--lilas-pastel);
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+ }
 
-        nav { background: white; padding: 15px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        nav a { text-decoration: none; color: #333; margin: 0 20px; font-weight: 600; transition: 0.3s; cursor: pointer; }
-        nav a:hover { color: #ff6f91; }
+        header p { 
+      font-size: 18px;
+            font-weight: 500;
+            color: var(--branco-puro); 
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+ }
 
-        section { display: none; padding: 60px 20px; animation: fadeIn 0.5s ease; }
-        .active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .container-form { background: white; max-width: 450px; margin: 0 auto; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 5px solid #ff6f91; }
-        .input-box { margin-bottom: 20px; text-align: left; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: #ff6f91; }
+        nav { 
+      background: var(--branco-puro);
+            padding: 20px; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            border-bottom: 2px solid var(--lilas-pastel);
+ }
         
-        input[type="text"], input[type="date"], input[type="time"] {
-            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; outline: none;
+        nav a { 
+      text-decoration: none;
+            color: #444; 
+            margin: 0 20px; 
+            font-weight: 600; 
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+ }
+
+        nav a::after {
+            content: '';
+      position: absolute;
+            width: 0; height: 2px;
+            bottom: -5px; left: 0;
+            background-color: var(--roxo-pastel-escuro);
+            transition: width 0.3s;
+ }
+
+ nav a:hover { color: var(--roxo-pastel-escuro);
+        }
+ nav a:hover::after { width: 100%;
         }
 
-        .checkbox-group { background: #fff0f3; padding: 15px; border-radius: 10px; border: 1px solid #ddd; max-height: 200px; overflow-y: auto; text-align: left; }
-        .check-item { display: block; margin-bottom: 10px; cursor: pointer; font-size: 14px; }
-        .check-item input { margin-right: 10px; accent-color: #ff6f91; width: auto; }
+ section { display: none; padding: 80px 20px; animation: fadeIn 0.8s ease;
+            flex: 1; }
+ .active { display: block;
+        }
+ @keyframes fadeIn { from { opacity: 0; transform: translateY(20px);
+        } to { opacity: 1; transform: translateY(0); } }
 
-        .btn-acao { background: #ff6f91; color: white; border: none; padding: 15px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; transition: 0.3s; }
-        .btn-acao:hover { background: #ff4d73; transform: translateY(-2px); }
+        .img-container-creative {
+      position: relative;
+            display: inline-block;
+            margin-top: 50px;
+            padding: 20px;
+        }
 
-        footer { padding: 40px; color: #888; font-size: 12px; }
+        .img-landing-creative {
+      width: 100%;
+            max-width: 500px;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            box-shadow: 0 20px 40px rgba(224, 187, 228, 0.4);
+      border: 8px solid var(--branco-puro);
+            outline: 2px solid var(--lilas-pastel);
+            transition: all 0.5s ease;
+            animation: floatImage 4s ease-in-out infinite;
+ }
+
+        @keyframes floatImage {
+      0%, 100% { transform: translateY(0) rotate(0deg);
+        }
+      50% { transform: translateY(-15px) rotate(2deg);
+        }
+        }
+
+        .img-container-creative::before {
+            content: '';
+      position: absolute;
+            top: 0; right: 0;
+            width: 150px; height: 150px;
+            background: var(--lilas-pastel);
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.3;
+ }
+
+        .container-form { 
+      background: var(--branco-puro);
+            max-width: 480px; 
+            margin: 0 auto; 
+            padding: 50px; 
+            border-radius: 30px; 
+            box-shadow: 0 15px 35px rgba(224, 187, 228, 0.2);
+      border: 1px solid var(--lilas-pastel);
+            position: relative;
+        }
+
+        .container-form::before {
+            content: '';
+      position: absolute;
+            top: 0; left: 50%; transform: translateX(-50%);
+            width: 100px; height: 5px;
+            background: var(--roxo-pastel-escuro);
+            border-radius: 0 0 10px 10px;
+ }
+
+ h2 { color: var(--roxo-pastel-escuro); font-weight: 700; margin-bottom: 30px;
+        }
+
+ .input-box { margin-bottom: 25px; text-align: left;
+        }
+ label { font-size: 13px; font-weight: 600; color: #888; margin-bottom: 8px; display: block;
+            text-transform: uppercase; }
+        
+        input {
+            width: 100%;
+      padding: 15px; border: 1.5px solid #eee; border-radius: 12px; box-sizing: border-box; outline: none;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+ }
+
+ input:focus { border-color: var(--roxo-pastel-medio); background: rgba(224, 187, 228, 0.1);
+            box-shadow: 0 0 10px rgba(224, 187, 228, 0.3); }
+
+        .checkbox-group { 
+            background: rgba(224, 187, 228, 0.05);
+      padding: 20px; border-radius: 15px; text-align: left; max-height: 180px; overflow-y: auto; border: 1px solid rgba(224, 187, 228, 0.2);
+ }
+
+ .check-item { display: block; margin-bottom: 12px; font-size: 14px; cursor: pointer; color: #666;
+            transition: color 0.3s; }
+ .check-item:hover { color: var(--roxo-pastel-escuro);
+        }
+ .check-item input { width: auto; margin-right: 12px; accent-color: var(--roxo-pastel-escuro);
+        }
+
+        .btn-acao { 
+      background: var(--roxo-pastel-medio);
+            color: var(--branco-puro); 
+            border: none; 
+            padding: 18px; 
+            border-radius: 15px; 
+            font-weight: 700; 
+            width: 100%; 
+            cursor: pointer; 
+            transition: all 0.3s ease;
+            margin-top: 15px;
+      font-size: 16px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(209, 179, 255, 0.4);
+ }
+
+ .btn-acao:hover { background: var(--roxo-pastel-escuro); transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(209, 179, 255, 0.5); }
+
+        footer { 
+            position: relative;
+      padding: 80px 20px; 
+            color: var(--roxo-pastel-escuro); 
+            font-size: 12px; 
+            letter-spacing: 2px; 
+            text-transform: uppercase; 
+            font-weight: 700;
+            background-image: url("flores.jpg");
+            background-size: cover;
+            background-position: center;
+      overflow: hidden;
+            border-top: 2px solid var(--lilas-pastel);
+        }
+
+        footer::before {
+            content: '';
+      position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(253, 253, 253, 0.85); 
+            z-index: 1;
+ }
+
+        footer span {
+            position: relative;
+      z-index: 2;
+            text-shadow: 1px 1px 0px var(--branco-puro);
+        }
     </style>
 </head>
-
 <body>
 
     <header>
-        <img src="logocarol.png" alt="Logic Beauty Logo" class="header-logo">
+        <img src="/logocarol.png" alt="Espaço Carol Logo" class="header-logo">
         <h1>Espaço Carol</h1>
-        <p>Realçando sua beleza com lógica e carinho.</p>
+        <p>Estética & Bem-estar</p>
     </header>
 
     <nav>
-        <a onclick="mostrar('home')">Início</a>
-        <a href="/login">Login / Cadastro</a>
-        <a onclick="mostrar('agendar')">Agendar</a>
-        <a href="/consulta">Consultar</a>
+        <a onclick="mostrar('home')">INÍCIO</a>
+        <a href="/login">LOGIN / CADASTRO</a>
+        <a onclick="mostrar('agendar')">AGENDAR</a>
     </nav>
 
     <section id="home" class="active">
-        <h2 style="color: #ff6f91;">Bem-vinda ao seu momento!</h2>
-        <img src="/landing img.jpg" alt="Salão" style="width: 100%; max-width: 500px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+  <h2 style="color: #666; font-weight: 500;">Onde a beleza encontra a lógica.</h2>
+        <p style="max-width: 600px; margin: 20px auto; color: #888;">Agende seu horário e experimente o cuidado que você merece em um ambiente projetado para o seu bem-estar.</p>
+        
+        <div class="img-container-creative">
+            <img src="salao.jpeg" alt="Salão Interno" class="img-landing-creative">
+        </div>
     </section>
 
     <section id="agendar">
-        <div class="container-form">
-            <h2>Marcar Horário</h2>
+ <div class="container-form">
+            <h2>Marcar seu Momento</h2>
             <form action="/agendar" method="POST">
                 <div class="input-box">
-                    <label>Seu Nome:</label>
-                    <input type="text" name="nome" placeholder="Digite seu nome" required>
-                </div>
-                <div class="input-box">
-                    <label>Data:</label>
+                    <label>Escolha a Data</label>
                     <input type="date" name="data" required>
-                </div>
+        </div>
                 <div class="input-box">
-                    <label>Hora:</label>
+                    <label>Escolha o Horário</label>
                     <input type="time" name="hora" required>
                 </div>
-                <div class="input-box">
-                    <label>Procedimentos:</label>
+  <div class="input-box">
+                    <label>Selecione os Procedimentos</label>
                     <div class="checkbox-group">
-                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Corte de cabelo"> Corte de cabelo</label>
-                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Escova"> Escova</label>
-                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Selagem"> Selagem</label>
-                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Manicure"> Manicure</label>
-                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Progressiva"> Progressiva</label>
-                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Pedicure"> Pedicure</label>
-                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Hidratação"> Hidratação</label>
-                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Pinturas"> Pinturas</label>
-                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Retoques"> Retoques</label>
-                    </div>
+                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Corte"> Corte de Cabelo</label>
+          <label class="check-item"><input type="checkbox" name="procedimento[]" value="Manicure"> Manicure</label>
+                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Escova"> Escova Elegante</label>
+                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Hidratação"> Hidratação Profunda</label>
+                        <label class="check-item"><input type="checkbox" name="procedimento[]" value="Maquiagem"> Maquiagem Social</label>
+                </div>
                 </div>
                 <button type="submit" class="btn-acao">Confirmar Agendamento</button>
             </form>
         </div>
     </section>
 
-    <section id="consulta">
-        <div class="container-form">
-            <h2>Buscar Agendamento</h2>
-            <form action="/consulta" method="GET">
-                <input type="text" name="nome" placeholder="Nome cadastrado" required style="margin-bottom: 20px; width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px;">
-                <button type="submit" class="btn-acao">Buscar</button>
-            </form>
-        </div>
-    </section>
-
     <footer>
-        &copy; 2026 Logic Beauty - FATEC Zona Sul
+  <span>&copy; 2026 LOGIC BEAUTY | ESPAÇO CAROL | Todos os direitos reservados.</span>
     </footer>
 
     <script>
         function mostrar(id) {
             document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+      document.getElementById(id).classList.add('active');
         }
     </script>
-
 </body>
 </html>
