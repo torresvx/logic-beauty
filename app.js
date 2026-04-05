@@ -60,3 +60,8 @@ app.post('/finalizar-atendimento', (req, res) => {
         });
     });
 });
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Servidor do Espaço Carol rodando na porta ${PORT}! 🚀`);
+});
