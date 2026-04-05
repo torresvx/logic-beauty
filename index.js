@@ -2,10 +2,17 @@ const express = require('express');
 const mysql = require('mysql2');
 const nodemailer = require('nodemailer');
 const cron = require('node-cron');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+app.use(express.static('public'));
 const db = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -18,8 +25,8 @@ const db = mysql.createPool({
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'seu-email@gmail.com', 
-        pass: 'sua-senha-de-app-do-google' 
+        user: process.env.EMAIL_USER, 
+        pass: process.env.EMAIL_PASS
     }
 });
 
@@ -34,7 +41,7 @@ cron.schedule('0 0 * * *', () => {
         if (err) return console.error("Erro na cron:", err);
         results.forEach(user => {
             const mailOptions = {
-                from: 'Espaço Carol <seu-email@gmail.com>',
+                from: `Espaço Carol <${process.env.EMAIL_USER}>`,
                 to: user.usuario_email,
                 subject: '🎁 Presente para você!',
                 text: `Olá ${user.nome}! Seu aniversário é em 3 dias! Ganhe 30% OFF e um procedimento grátis!`
@@ -59,4 +66,9 @@ app.post('/finalizar-atendimento', (req, res) => {
             res.send("Atendimento finalizado!");
         });
     });
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Servidor do Espaço Carol rodando na porta ${PORT}! 🚀`);
 });
