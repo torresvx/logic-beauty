@@ -2,9 +2,9 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acesso - Espaço Carol</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
@@ -13,233 +13,81 @@
             --roxo-pastel-medio: #D1B3FF;
             --roxo-pastel-escuro: #B38BFF;
             --off-white: #FDFDFD;
-            --cinza-texto: #555;
             --branco-puro: #FFFFFF;
         }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: var(--off-white); 
-            margin: 0;
-            color: var(--cinza-texto);
-            text-align: center;
-        }
+        body { font-family: 'Poppins', sans-serif; background: var(--off-white); margin: 0; text-align: center; padding-bottom: 50px; }
 
-        header {
-            position: relative;
-            background-image: url("calendario.jpg");
-            background-size: cover;
-            background-position: center;
-            padding: 90px 20px;
-            margin-bottom: 50px;
-            border-bottom: 2px solid var(--lilas-pastel);
-            overflow: hidden;
-        }
+        header { background: var(--branco-puro); padding: 40px 20px; border-bottom: 2px solid var(--lilas-pastel); margin-bottom: 30px; }
+        h1 { font-family: 'Playfair Display', serif; font-size: 50px; font-style: italic; color: var(--roxo-pastel-escuro); margin: 0; }
 
-        header::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(255, 255, 255, 0.75); 
-            z-index: 1;
-        }
+        .container { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; padding: 20px; }
 
-        header > * { position: relative; z-index: 2; }
+        .box { background: var(--branco-puro); padding: 30px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 350px; border-top: 5px solid var(--lilas-pastel); }
+        h2 { color: var(--roxo-pastel-escuro); margin-bottom: 20px; }
 
-        .header-logo {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            max-width: 90px; 
-            height: auto;
-            z-index: 10;
-            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.1));
-        }
+        .input-group { text-align: left; margin-bottom: 15px; }
+        label { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; }
+        input { width: 100%; padding: 12px; border: 1.5px solid #eee; border-radius: 10px; box-sizing: border-box; outline: none; margin-top: 5px; }
 
-        h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 75px;
-            font-weight: 600;
-            font-style: italic;
-            color: var(--roxo-pastel-escuro);
-            margin: 0;
-            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
-        }
+        .btn-submit { background: var(--roxo-pastel-medio); color: white; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: 700; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .btn-submit:hover { background: var(--roxo-pastel-escuro); transform: translateY(-2px); }
 
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start; 
-            gap: 40px;
-            flex-wrap: wrap;
-            padding: 20px;
-            margin-bottom: 40px;
-        }
-
-        .box {
-            background: var(--branco-puro);
-            padding: 40px;
-            border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(224, 187, 228, 0.2); 
-            width: 340px;
-            border-top: 5px solid var(--lilas-pastel);
-            min-height: 620px; 
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        h2 { color: var(--roxo-pastel-escuro); font-size: 24px; margin-bottom: 25px; font-weight: 700; }
-
-        .input-group { position: relative; margin-bottom: 15px; text-align: left; }
-        
-        .input-group i.main-icon { 
-            position: absolute; 
-            left: 15px; 
-            top: 42px; 
-            color: var(--roxo-pastel-medio); 
-        }
-
-        .btn-eye {
-            position: absolute;
-            right: 15px;
-            top: 42px;
-            cursor: pointer;
-            color: #ccc;
-            transition: 0.3s;
-        }
-
-        .btn-eye:hover { color: var(--roxo-pastel-escuro); }
-
-        label { 
-            font-size: 13px; 
-            font-weight: 600; 
-            color: #888; 
-            margin-bottom: 5px; 
-            display: block; 
-            text-transform: uppercase; 
-        }
-
-        input {
-            width: 100%;
-            padding: 12px 45px 12px 45px; 
-            border: 1.5px solid #eee;
-            border-radius: 12px;
-            box-sizing: border-box;
-            outline: none;
-            margin-top: 5px;
-            transition: 0.3s;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        input:focus { border-color: var(--roxo-pastel-medio); background: rgba(224, 187, 228, 0.05); }
-
-        .btn-submit {
-            padding: 18px;
-            border: none;
-            background: var(--roxo-pastel-medio);
-            color: var(--branco-puro);
-            border-radius: 15px;
-            cursor: pointer;
-            font-weight: 700;
-            width: 100%;
-            margin-top: auto; 
-            transition: 0.3s;
-            text-transform: uppercase;
-            box-shadow: 0 5px 15px rgba(209, 179, 255, 0.4);
-        }
-
-        .btn-submit:hover { 
-            background: var(--roxo-pastel-escuro); 
-            transform: translateY(-2px); 
-            box-shadow: 0 8px 20px rgba(209, 179, 255, 0.5);
-        }
-
-        .btn-voltar {
-            display: inline-block;
-            margin-top: 20px;
-            text-decoration: none;
-            color: #bbb;
-            font-size: 14px;
-        }
+        .btn-voltar { display: block; margin-top: 30px; text-decoration: none; color: #bbb; font-size: 14px; }
     </style>
 </head>
 <body>
 
     <header>
-        <img src="/logocarol.png" alt="Logo" class="header-logo">
         <h1>Espaço Carol</h1>
     </header>
 
     <div class="container">
         <div class="box">
-            <div>
-                <h2>Login</h2>
-                <form action="/login" method="POST">
-                    <div class="input-group">
-                        <label>E-mail</label>
-                        <input type="email" name="usuario" placeholder="Seu e-mail" required>
-                        <i class="fa fa-envelope main-icon"></i> 
-                    </div>
-                    <div class="input-group">
-                        <label>Senha</label>
-                        <input type="password" name="senha" id="passLogin" placeholder="Sua senha" required>
-                        <i class="fa fa-lock main-icon"></i>
-                        <i class="fa fa-eye btn-eye" onclick="togglePass('passLogin', this)"></i>
-                    </div>
-                </form>
-            </div>
-            <button type="submit" onclick="this.closest('.box').querySelector('form').submit()" class="btn-submit">Entrar no Sistema</button>
+            <h2>Login</h2>
+            <form action="/login" method="POST">
+                <div class="input-group">
+                    <label>E-mail</label>
+                    <input type="email" name="usuario" placeholder="Seu e-mail" required>
+                </div>
+                <div class="input-group">
+                    <label>Senha</label>
+                    <input type="password" name="senha" placeholder="Sua senha" required>
+                </div>
+                <button type="submit" class="btn-submit">Entrar</button>
+            </form>
         </div>
+
+        <!-- FORMULÁRIO DE CADASTRO -->
         <div class="box">
-            <div>
-                <h2>Criar Conta</h2>
-                <form action="/cadastrar" method="POST">
-                    <div class="input-group">
-                        <label>Nome Completo</label>
-                        <input type="text" name="nome" placeholder="Seu nome" required>
-                        <i class="fa fa-user main-icon"></i>
-                    </div>
-                    <div class="input-group">
-                        <label>E-mail</label>
-                        <input type="email" name="usuario" placeholder="Seu melhor e-mail" required>
-                        <i class="fa fa-at main-icon"></i>
-                    </div>
-                    <div class="input-group">
-                        <label>Telefone</label>
-                        <input type="text" name="telefone" placeholder="(11) 99999-9999" required>
-                        <i class="fa fa-phone main-icon"></i>
-                    </div>
-                    <div class="input-group">
-                        <label>Nascimento</label>
-                        <input type="date" name="data_nascimento" required>
-                        <i class="fa fa-calendar main-icon"></i>
-                    </div>
-                    <div class="input-group">
-                        <label>Criar Senha</label>
-                        <input type="password" name="senha" id="passCad" placeholder="Crie uma senha" required>
-                        <i class="fa fa-key main-icon"></i>
-                        <i class="fa fa-eye btn-eye" onclick="togglePass('passCad', this)"></i>
-                    </div>
-                </form>
-            </div>
-            <button type="submit" onclick="this.closest('.box').querySelector('form').submit()" class="btn-submit">Criar Minha Conta</button>
+            <h2>Criar Conta</h2>
+            <form action="/cadastrar" method="POST">
+                <div class="input-group">
+                    <label>Nome Completo</label>
+                    <input type="text" name="nome" placeholder="Seu nome" required>
+                </div>
+                <div class="input-group">
+                    <label>E-mail</label>
+                    <input type="email" name="usuario" placeholder="Seu melhor e-mail" required>
+                </div>
+                <div class="input-group">
+                    <label>Telefone</label>
+                    <input type="text" name="telefone" placeholder="(11) 99999-9999" required>
+                </div>
+                <div class="input-group">
+                    <label>Nascimento</label>
+                    <input type="date" name="data_nascimento" required>
+                </div>
+                <div class="input-group">
+                    <label>Criar Senha</label>
+                    <input type="password" name="senha" placeholder="Crie uma senha" required>
+                </div>
+                <button type="submit" class="btn-submit">Cadastrar</button>
+            </form>
         </div>
     </div>
 
-    <a href="/" class="btn-voltar"><i class="fa fa-arrow-left"></i> Voltar para o Início</a>
+    <a href="/" class="btn-voltar"><i class="fa fa-arrow-left"></i> Voltar ao Início</a>
 
-    <script>
-        function togglePass(id, icone) {
-            const input = document.getElementById(id);
-            if (input.type === "password") {
-                input.type = "text";
-                icone.classList.replace("fa-eye", "fa-eye-slash");
-            } else {
-                input.type = "password";
-                icone.classList.replace("fa-eye-slash", "fa-eye");
-            }
-        }
-    </script>
 </body>
 </html>

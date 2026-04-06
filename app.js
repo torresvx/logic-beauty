@@ -30,30 +30,31 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/meus-agendamentos', (req, res) => {
-    res.render('meus-agendamentos'); 
+    res.render('meus-agendamentos', { agendamentos: [] }); 
 });
 
 app.get('/consulta', (req, res) => {
-    res.render('consulta'); 
+    res.render('consulta', { agendamentos: [], clienteBusca: '' }); 
 });
 
-app.get('/editar-agendamento', (req, res) => {
-    res.render('editar-agendamento');
-});
-
-app.post('/finalizar-atendimento', (req, res) => {
-    const { usuario_id } = req.body;
-    const sqlUpdate = "UPDATE usuarios SET atendimentos_concluidos = atendimentos_concluidos + 1 WHERE id_usuarios = ?";
+app.post('/cadastrar', (req, res) => {
+    const { nome, usuario, senha, data_nascimento, telefone } = req.body;
+    const sql = "INSERT INTO usuarios (nome, usuario_email, senha, data_nascimento, telefone) VALUES (?, ?, ?, ?, ?)";
     
-    db.query(sqlUpdate, [usuario_id], (err) => {
-        if (err) throw err;
-        db.query("SELECT atendimentos_concluidos FROM usuarios WHERE id_usuarios = ?", [usuario_id], (err, results) => {
-            if (results && results[0] && results[0].atendimentos_concluidos >= 5) {
-                console.log("Cliente fiel! Ganhou procedimento grátis.");
-            }
-            res.send("Atendimento finalizado!");
-        });
+    db.query(sql, [nome, usuario, senha, data_nascimento, telefone], (err) => {
+        if (err) return res.status(500).send("Erro ao cadastrar");
+        res.send("<h1>Cadastro realizado! ✅</h1><a href='/login'>Fazer Login</a>");
     });
+});
+
+app.post('/agendar', (req, res) => {
+    const { data, hora, procedimento } = req.body;
+    res.send("<h1>Agendamento solicitado! 📅</h1><a href='/'>Voltar</a>");
+});
+
+app.post('/login', (req, res) => {
+    const { usuario, senha } = req.body;
+    res.redirect('/meus-agendamentos');
 });
 
 const PORT = process.env.PORT || 10000; 
