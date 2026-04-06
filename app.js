@@ -12,57 +12,41 @@ app.use(express.json());
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
-
 const db = mysql.createPool({
-    host: process.env.DB_HOST,        
-    user: process.env.DB_USER,        
-    password: process.env.DB_PASSWORD, 
-    database: process.env.DB_NAME,     
-    port: process.env.DB_PORT || 4000, 
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT || 4000,
     ssl: { minVersion: 'TLSv1.2', rejectUnauthorized: true }
-});
-
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER, 
-        pass: process.env.EMAIL_PASS  
-    }
-});
-
-cron.schedule('0 0 * * *', () => {
-    const sql = `
-        SELECT nome, usuario_email 
-        FROM usuarios 
-        WHERE DATE_FORMAT(data_nascimento, '%m-%d') = DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL 3 DAY), '%m-%d')
-    `;
-
-    db.query(sql, (err, results) => {
-        if (err) return console.error("Erro na cron:", err);
-        results.forEach(user => {
-            const mailOptions = {
-                from: `Espaço Carol <${process.env.EMAIL_USER}>`,
-                to: user.usuario_email,
-                subject: '🎁 Presente para você!',
-                text: `Olá ${user.nome}! Seu aniversário é em 3 dias! Ganhe 30% OFF e um procedimento grátis!`
-            };
-            transporter.sendMail(mailOptions);
-        });
-    });
 });
 
 app.get('/', (req, res) => {
     res.render('index'); 
 });
 
+app.get('/login', (req, res) => {
+    res.render('login'); 
+});
+
+app.get('/meus-agendamentos', (req, res) => {
+    res.render('meus-agendamentos'); 
+});
+
+app.get('/consulta', (req, res) => {
+    res.render('consulta'); 
+});
+
+app.get('/editar-agendamento', (req, res) => {
+    res.render('editar-agendamento');
+});
+
 app.post('/finalizar-atendimento', (req, res) => {
     const { usuario_id } = req.body;
-
     const sqlUpdate = "UPDATE usuarios SET atendimentos_concluidos = atendimentos_concluidos + 1 WHERE id_usuarios = ?";
     
     db.query(sqlUpdate, [usuario_id], (err) => {
         if (err) throw err;
-
         db.query("SELECT atendimentos_concluidos FROM usuarios WHERE id_usuarios = ?", [usuario_id], (err, results) => {
             if (results && results[0] && results[0].atendimentos_concluidos >= 5) {
                 console.log("Cliente fiel! Ganhou procedimento grátis.");
