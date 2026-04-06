@@ -6,6 +6,7 @@ const path = require('path');
 require('dotenv').config();
 
 const app = express();
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.set('view engine', 'ejs');
@@ -13,11 +14,11 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 const db = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT,
+    host: process.env.DB_HOST,        
+    user: process.env.DB_USER,        
+    password: process.env.DB_PASSWORD, 
+    database: process.env.DB_NAME,     
+    port: process.env.DB_PORT || 4000, 
     ssl: { minVersion: 'TLSv1.2', rejectUnauthorized: true }
 });
 
@@ -50,6 +51,10 @@ cron.schedule('0 0 * * *', () => {
     });
 });
 
+app.get('/', (req, res) => {
+    res.render('index'); 
+});
+
 app.post('/finalizar-atendimento', (req, res) => {
     const { usuario_id } = req.body;
 
@@ -66,6 +71,7 @@ app.post('/finalizar-atendimento', (req, res) => {
         });
     });
 });
+
 const PORT = process.env.PORT || 10000; 
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Servidor do Espaço Carol rodando na porta ${PORT}! 🚀`);
