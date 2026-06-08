@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel da Cabeleireira - Espaço Beauty</title>
+    <style>
+        :root {
+            --bg-outer: #4A2E35;       /* Roxo Aralendo - Fundo externo */
+            --bg-app: #F1F1F1;         /* Cinza Claro - Fundo principal do aplicativo */
+            --bg-sidebar: #e5d2d6;     /* Variação suave baseada no Rose Bold para a barra lateral */
+            --bg-card: f74C2C2;        /* Rosa Quartzo (#f4C2C2) - Fundo dos cartões claros */
+            --bg-dark-card: #4A2E35;   /* Roxo Aralendo - Fundo dos cartões escuros (destaques/gráficos) */
+            --text-dark: #4A2E35;      /* Roxo Aralendo - Textos principais */
+            --text-light: #B76E79;     /* Rose Bold - Textos secundários, rótulos e descrições */
+            --accent-pink: #B76E79;    /* Rose Bold - Elementos de cancelamento ou pílulas secundárias */
+            --accent-teal: #f4C2C2;    /* Rosa Quartzo (#f4C2C2) - Gráficos e elementos de destaque */
+            --accent-yellow: #B76E79;  /* Rose Bold - Ajustado para manter a consistência da paleta */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body {
+            background-color: var(--bg-outer);
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; padding: 20px;
+        }
+
+        .app-container {
+            width: 100%; max-width: 1300px; height: 90vh;
+            background-color: var(--bg-app); border-radius: 30px;
+            display: flex; overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .sidebar {
+            width: 240px; background-color: var(--bg-sidebar);
+            padding: 40px 20px; display: flex; flex-direction: column;
+        }
+        .logo-area { margin-bottom: 40px; text-align: center; }
+        .logo-area h2 { color: var(--text-dark); font-size: 1.5rem; letter-spacing: 1px; }
+        .logo-area span { color: var(--text-light); font-size: 0.8rem; }
+        
+        .menu-item {
+            padding: 12px 20px; margin-bottom: 10px; border-radius: 20px;
+            color: var(--text-dark); font-weight: bold; font-size: 0.9rem;
+            cursor: pointer; transition: 0.3s; text-decoration: none; display: block;
+        }
+        .menu-item.active, .menu-item:hover { background-color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .logout-btn { margin-top: auto; color: var(--text-dark); font-weight: bold; text-decoration: none; padding: 0 20px; }
+
+        .main-content {
+            flex: 1; padding: 40px; display: flex; flex-direction: column; overflow-y: auto;
+        }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header h1 { color: var(--text-dark); font-size: 1.8rem; font-weight: 400; letter-spacing: 1px; text-transform: uppercase; }
+        .search-bar {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            width: 300px;
+            color: var(--text-dark);
+            font-size: 0.85rem;
+            border: none;
+            outline: none;
+        }
+
+        .dashboard-grid {
+            display: grid; grid-template-columns: 1fr 1fr 280px; gap: 20px; flex: 1;
+        }
+
+        .card { background-color: var(--bg-card); border-radius: 20px; padding: 25px; }
+        .card-title { color: var(--text-dark); font-size: 0.9rem; font-weight: bold; margin-bottom: 15px; }
+        
+        .agendamento-pill {
+            background: white; border-radius: 15px; padding: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        .agendamento-pill .data { background: white; color: var(--text-dark); font-weight: bold; font-size: 0.9rem; }
+        .agendamento-pill .info { color: var(--text-light); font-size: 0.85rem; text-align: right; }
+        .agendamento-pill strong { color: var(--text-dark); }
+
+        .manage-area { margin-top: 10px; }
+        .btn-acao {
+            border: none; padding: 6px 12px; border-radius: 10px; cursor: pointer;
+            font-size: 0.75rem; font-weight: bold; color: white; transition: 0.3s; margin-left: 5px;
+        }
+        .btn-edit { background-color: var(--text-dark); color: #F1F1F1; }
+        .btn-cancel { background-color: var(--accent-pink); color: white; }
+        
+        .empty-state { color: var(--text-dark); font-size: 0.9rem; font-style: italic; }
+
+        .right-col { display: flex; flex-direction: column; gap: 20px; }
+        .dark-card { background-color: var(--bg-dark-card); border-radius: 20px; padding: 25px; color: #F1F1F1; text-align: center; }
+        .dark-card h4 { font-size: 0.9rem; font-weight: 400; margin-bottom: 20px; opacity: 0.9; }
+        
+        .circle-chart {
+            width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 10px auto;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .chart-pink { background: conic-gradient(var(--accent-pink) 80%, rgba(255,255,255,0.1) 0); }
+        .chart-teal { background: conic-gradient(var(--accent-teal) 100%, rgba(255,255,255,0.1) 0); }
+        
+        .circle-inner {
+            width: 80px; height: 80px; border-radius: 50%; background-color: var(--bg-dark-card);
+            display: flex; justify-content: center; align-items: center;
+            font-weight: bold; font-size: 0.9rem; color: #F1F1F1;
+        }
+        .ver-mais { color: #F1F1F1; font-size: 0.75rem; text-decoration: none; opacity: 0.7; margin-top: 10px; display: block; }
+        .ver-mais:hover { opacity: 1; text-decoration: underline; }
+</style>
+</head>
+<body>
+
+    <% 
+        // Agora usamos 'status_agendamento' e comparamos com os valores reais do seu banco
+        const futuros = agendamentos.filter(a => a.status_agendamento === 'pendente');
+        const concluidos = agendamentos.filter(a => a.status_agendamento === 'concluido');
+        const fluxoTotal = agendamentos.length;
+    %>
+
+    <div class="app-container">
+        
+        <aside class="sidebar">
+            <div class="logo-area">
+                <h2>Espaço Beauty</h2>
+                <span>Profissional</span>
+            </div>
+            
+            <a href="#" class="menu-item active" onclick="mudarAba('dashboard', this)">⊞ Dashboard</a>
+            <a href="#" class="menu-item" onclick="mudarAba('calendario', this)">📅 Agendamento</a>
+            <a href="#" class="menu-item" onclick="mudarAba('servicos', this)">✂️ Meus Serviços</a>
+            <a href="#" class="menu-item" onclick="mudarAba('clientes', this)">💬 Clientes</a>
+            <a href="#" class="menu-item">⚙️ Ajustes</a>
+            
+            <a href="/" class="logout-btn">➜ Sair</a>
+        </aside>
+
+        <main class="main-content">
+            
+            <header class="header">
+                <h1>OLÁ, <%= nomeProfissional.toUpperCase() %>!</h1>
+                <input type="text" class="search-bar" id="buscaGlobal" 
+                    placeholder="🔍 Buscar cliente ou agendamento..." 
+                    onkeyup="filtrarTudo()">
+            </header>
+
+            <div id="view-dashboard" style="display: block;">
+                <!-- Campo de Busca -->
+
+                <div class="dashboard-grid">
+                    <!-- Coluna Esquerda: Próximos Agendamentos -->
+                    <div class="card">
+                        <div class="card-title">Próximos Agendamentos</div>
+                        <div id="lista-agendamentos">
+                            <% if(futuros.length > 0) { %>
+                                <% futuros.slice(0, 5).forEach(a => { %>
+                                    <div class="agendamento-pill item-busca">
+                                        <div class="data"><%= new Date(a.data_hora_agendamento).toLocaleDateString('pt-BR') %></div>
+                                        <div class="info">
+                                            <!-- Nome do Cliente em destaque -->
+                                            <strong><%= a.nome_cliente %></strong><br>
+                                            <!-- Serviço menorzinho -->
+                                            <span style="font-size: 0.8rem; color: var(--text-light);"><%= a.nome_servico %></span><br>
+                                            R$ <%= parseFloat(a.preco_servico || 0).toFixed(2) %>
+                                        </div>
+                                    </div>
+                                <% }) %>
+                            <% } else { %>
+                                <p class="empty-state">Nenhum agendamento pendente.</p>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <!-- Coluna Meio: Histórico (Reduzido) -->
+                    <!-- Coluna Meio: Histórico Recente -->
+                    <div class="card">
+                        <div class="card-title">Histórico Recente</div>
+                        <div id="lista-historico">
+                            <% if(concluidos.length > 0) { %>
+                                <!-- Alterado para mostrar 5 itens -->
+                                <% concluidos.slice(0, 5).forEach(a => { %>
+                                    <!-- Removida a opacidade para ficar com a cor forte -->
+                                    <div class="agendamento-pill">
+                                        <div class="data"><%= new Date(a.data_hora_agendamento).toLocaleDateString('pt-BR') %></div>
+                                        <div class="info">
+                                            <strong><%= a.nome_cliente %></strong><br>
+                                            <span style="font-size: 0.8rem; color: var(--text-light);"><%= a.nome_servico %></span><br>
+                                            <!-- Adicionado o preço para igualar o tamanho -->
+                                            R$ <%= parseFloat(a.preco_servico || 0).toFixed(2) %>
+                                        </div>
+                                    </div>
+                                <% }) %>
+                            <% } else { %>
+                                <p class="empty-state">Nenhum histórico recente.</p>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <div class="right-col">
+                        <div class="dark-card">
+                            <h4>Lucro Gerado</h4>
+                            <div class="circle-chart chart-pink">
+                                <div class="circle-inner">💰</div>
+                            </div>
+                            <h2 style="margin-top: 10px;">R$ <%= lucro.toFixed(2) %></h2>
+                            <a href="#" class="ver-mais">Ver detalhes ➜</a>
+                        </div>
+
+                        <div class="dark-card">
+                            <h4>Fluxo de Clientes</h4>
+                            <div class="circle-chart chart-teal">
+                                <div class="circle-inner"><%= fluxoTotal %></div>
+                            </div>
+                            <h2 style="margin-top: 10px; font-size: 1.2rem;">Atendimentos</h2>
+                            <a href="#" class="ver-mais">Ver relatório ➜</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="view-calendario" style="display: none;">
+                <h2 style="margin-bottom: 20px; color: var(--text-dark);">Sua Agenda Completa</h2>
+
+                <% 
+                    const diasOcupados = agendamentos.map(a => new Date(a.data_hora_agendamento).getDay());
+                    const temAgendamento = (dia) => diasOcupados.includes(dia);
+                %>
+
+                <div style="display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 5px;">
+
+                    <button class="btn-filtro-dia" style="padding: 10px 25px; border: none; border-radius: 15px; background: var(--text-dark); color: white; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" onclick="filtrarPorDia('todos', this)">Todos</button>
+                    
+                    <button class="btn-filtro-dia" style="padding: 10px 25px; border: none; border-radius: 15px; background: white; color: var(--text-light); font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.03);" onclick="filtrarPorDia(2, this)">
+                        Terça <% if(temAgendamento(2)) { %><span style="color: #e74c3c; margin-left: 5px;">●</span><% } %>
+                    </button>
+                    
+                    <button class="btn-filtro-dia" style="padding: 10px 25px; border: none; border-radius: 15px; background: white; color: var(--text-light); font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.03);" onclick="filtrarPorDia(3, this)">
+                        Quarta <% if(temAgendamento(3)) { %><span style="color: #e74c3c; margin-left: 5px;">●</span><% } %>
+                    </button>
+                    
+                    <button class="btn-filtro-dia" style="padding: 10px 25px; border: none; border-radius: 15px; background: white; color: var(--text-light); font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.03);" onclick="filtrarPorDia(4, this)">
+                        Quinta <% if(temAgendamento(4)) { %><span style="color: #e74c3c; margin-left: 5px;">●</span><% } %>
+                    </button>
+                    
+                    <button class="btn-filtro-dia" style="padding: 10px 25px; border: none; border-radius: 15px; background: white; color: var(--text-light); font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.03);" onclick="filtrarPorDia(5, this)">
+                        Sexta <% if(temAgendamento(5)) { %><span style="color: #e74c3c; margin-left: 5px;">●</span><% } %>
+                    </button>
+                    
+                    <button class="btn-filtro-dia" style="padding: 10px 25px; border: none; border-radius: 15px; background: white; color: var(--text-light); font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.03);" onclick="filtrarPorDia(6, this)">
+                        Sábado <% if(temAgendamento(6)) { %><span style="color: #e74c3c; margin-left: 5px;">●</span><% } %>
+                    </button>
+                    
+                </div>
+
+                
+
+                <div style="background: white; padding: 25px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);">
+                    <% if(agendamentos && agendamentos.length > 0) { %>
+                        <% agendamentos.forEach(ag => { %>
+                            <div class="item-agendamento-calendario" data-dia="<%= new Date(ag.data_hora_agendamento).getDay() %>" style="padding: 15px; border-bottom: 1px solid #eee; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong style="color: var(--text-dark); font-size: 1.1rem;"><%= ag.nome_cliente %></strong> <br>
+                                    <span style="color: var(--text-light);"><%= ag.nome_servico %></span>
+                                </div>
+                                <div style="text-align: right;">
+                                    <strong><%= new Date(ag.data_hora_agendamento).toLocaleString('pt-BR', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %></strong><br>
+                                    
+                                    <span style="color: var(--text-light); font-weight: bold; display: block;">
+                                        Status: <%= ag.status_agendamento %>
+                                    </span>
+
+                                    <% 
+                                        // Debug: Isso vai mostrar o valor exato no seu HTML se algo estiver errado
+                                        console.log("Status do agendamento:", ag.status_agendamento); 
+                                    %>
+                                    <div style="margin-top: 10px;">
+                                        <button class="btn-acao btn-cancel" style="background-color: #d9534f;" onclick="deletarAgendamento('<%= ag.id_agendamento %>')">✕ Excluir</button>
+                                        <% if(ag.status_agendamento === 'pendente') { %>
+                                            <div style="margin-top: 10px;">
+                                                <button class="btn-acao btn-edit" style="background-color: var(--accent-teal);" onclick="atualizarStatus('<%= ag.id_agendamento %>', 'concluido')">✓ Concluir</button>
+                                                <button class="btn-acao btn-cancel" style="background-color: var(--accent-pink);" onclick="atualizarStatus('<%= ag.id_agendamento %>', 'cancelado')">✕ Cancelar</button>
+                                            </div>
+                                        <% } else { %>
+                                            <small style="color: #999;">Finalizado/Cancelado</small>
+                                        <% } %>
+                                    </div>    
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <p class="empty-state">Nenhum agendamento encontrado.</p>
+                    <% } %>
+                </div>
+            </div>
+
+            <div id="view-clientes" style="display: none;">
+                <h2 style="margin-bottom: 20px; color: var(--text-dark);">Relatório Gerencial de Clientes</h2>
+
+                <% 
+                    const resumoClientes = {};
+                    if (clientes && clientes.length > 0) {
+                        clientes.forEach(cli => {
+                            if (!resumoClientes[cli.cliente_nome]) {
+                                resumoClientes[cli.cliente_nome] = { nome: cli.cliente_nome, telefone: cli.cliente_telefone, visitas: 0, ultimoServico: cli.nome_servico, ultimaData: cli.data_hora_agendamento };
+                            }
+                            resumoClientes[cli.cliente_nome].visitas += 1;
+                        });
+                    }
+                    const clientesAgrupados = Object.values(resumoClientes).sort((a, b) => b.visitas - a.visitas);
+                %>
+
+                <div class="card">
+                    <div class="card-title">Ranking de Fidelidade</div>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr style="color: var(--text-light); text-align: left; font-size: 0.85rem;">
+                            <th style="padding: 10px;">Cliente</th>
+                            <th style="padding: 10px;">Contato</th>
+                            <th style="padding: 10px; text-align: center;">Visitas</th>
+                            <th style="padding: 10px;">Último Serviço</th>
+                        </tr>
+                        <% clientesAgrupados.forEach(cli => { %>
+                            <tr style="border-top: 1px solid #dcd3d8;">
+                                <td style="padding: 15px 10px; font-weight: bold;"><%= cli.nome %></td>
+                                <td style="padding: 15px 10px; font-size: 0.9rem;"><%= cli.telefone %></td>
+                                <td style="padding: 15px 10px; text-align: center;"><span style="background: var(--accent-pink); color: white; padding: 2px 10px; border-radius: 10px;"><%= cli.visitas %>x</span></td>
+                                <td style="padding: 15px 10px; font-size: 0.9rem;"><%= cli.ultimoServico %></td>
+                            </tr>
+                        <% }) %>
+                    </table>
+                </div>
+            </div>
+
+            <div id="view-servicos" style="display: none;">
+                <h2 style="margin-bottom: 20px; color: var(--text-dark);">Minhas Especialidades</h2>
+                <div style="background: white; padding: 25px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);">
+                    <form action="/cabeleireira/salvar-servicos" method="POST">
+                        <div style="display: grid; gap: 15px; margin-bottom: 25px;">
+                            <% servicosDisponiveis.forEach(s => { %>
+                                <label style="display: flex; align-items: center; gap: 15px; padding: 15px; border: 1px solid #eee; border-radius: 12px; cursor: pointer;">
+                                    <input type="checkbox" name="servicos" value="<%= s.id_servico %>" 
+                                        style="width: 20px; height: 20px; accent-color: var(--accent-pink);"
+                                        <%= minhasEspecialidades.includes(s.id_servico) ? 'checked' : '' %>>
+                                    <div>
+                                        <strong style="color: var(--text-dark); font-size: 1.1rem;"><%= s.nome_servico %></strong><br>
+                                        <span style="color: var(--text-light); font-size: 0.9rem;"><%= s.descricao_servico %></span>
+                                    </div>
+                                </label>
+                            <% }) %>
+                        </div>
+                        <button type="submit" style="background: var(--accent-teal); color: white; border: none; padding: 15px 30px; border-radius: 12px; font-weight: bold; font-size: 1rem; cursor: pointer; width: 100%;">Salvar Especialidades</button>
+                    </form>
+                </div>
+            </div>
+
+        </main> 
+    </div>
+
+    <script>
+        function alertaPrototipo(acao) {
+            alert("Como este é um protótipo, a função de " + acao + " será conectada ao banco de dados na próxima etapa do projeto!");
+        }
+
+        function mudarAba(aba, elementoClicado) {
+            document.getElementById('view-dashboard').style.display = 'none';
+            document.getElementById('view-calendario').style.display = 'none';
+            document.getElementById('view-clientes').style.display = 'none';
+            document.getElementById('view-servicos').style.display = 'none';
+            
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => item.classList.remove('active'));
+
+            if (elementoClicado) {
+                elementoClicado.classList.add('active');
+            }
+            
+            if(aba === 'dashboard') document.getElementById('view-dashboard').style.display = 'block';
+            if(aba === 'calendario') document.getElementById('view-calendario').style.display = 'block';
+            if(aba === 'clientes') document.getElementById('view-clientes').style.display = 'block';
+            if(aba === 'servicos') document.getElementById('view-servicos').style.display = 'block';
+        }
+
+        function filtrarPorDia(dia, btnClicado) {
+            const botoes = document.querySelectorAll('.btn-filtro-dia');
+            botoes.forEach(b => {
+                b.style.background = 'white';
+                b.style.color = 'var(--text-light)';
+            });
+
+            btnClicado.style.background = 'var(--text-dark)';
+            btnClicado.style.color = 'white';
+
+            const itens = document.querySelectorAll('.item-agendamento-calendario');
+            itens.forEach(item => {
+                if (dia === 'todos' || item.getAttribute('data-dia') == dia) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function filtrarTudo() {
+            const termo = document.getElementById('buscaGlobal').value.toLowerCase();
+            
+            // Define os seletores de elementos que queremos buscar em cada aba
+            // Adicionei classes identificadoras específicas para cada tipo de item
+            const itensParaBuscar = [
+                { selector: '.item-busca', container: 'view-dashboard' },          // Dashboard
+                { selector: '.item-agendamento-calendario', container: 'view-calendario' }, // Calendário
+                { selector: 'tr', container: 'view-clientes' },                   // Clientes (linhas da tabela)
+                { selector: 'label', container: 'view-servicos' }                 // Serviços (labels de checkboxes)
+            ];
+
+            itensParaBuscar.forEach(item => {
+                const elementos = document.querySelectorAll(`#${item.container} ${item.selector}`);
+                elementos.forEach(el => {
+                    const texto = el.textContent.toLowerCase();
+                    // Verifica se o termo existe no texto do elemento
+                    if (texto.includes(termo)) {
+                        el.style.display = ""; // Mostra
+                    } else {
+                        el.style.display = "none"; // Oculta
+                    }
+                });
+            });
+        }
+
+        function atualizarStatus(idAgendamento, novoStatus) {
+            fetch(`/cabeleireira/atualizar-agendamento/${idAgendamento}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: novoStatus }) // envia 'concluido' ou 'cancelado'
+            })
+            .then(response => {
+                if (response.ok) {
+                    location.reload(); 
+                } else {
+                    alert("Erro ao atualizar o status no banco de dados.");
+                }
+            })
+            .catch(error => console.error('Erro:', error));
+        }
+        function deletarAgendamento(id) {
+            if (confirm("Tem certeza que deseja excluir este agendamento permanentemente?")) {
+                fetch(`/cabeleireira/deletar-agendamento/${id}`, {
+                    method: 'POST'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload(); // Recarrega a página após excluir
+                    } else {
+                        alert("Erro ao excluir agendamento.");
+                    }
+                })
+                .catch(error => console.error('Erro:', error));
+            }
+        }
+    </script>
+</body>
+</html>

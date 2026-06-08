@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espaço Beauty</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --primary-dark: #4A2E35;    
+            --secondary-light: #F1F1F1; 
+            --accent-color: #B76E79;   
+            --accent-light: #F4C2C2;    
+            --text-main: #4A2E35;       
+            --font-main: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body { font-family: var(--font-main); color: var(--text-main); background-color: var(--secondary-light); }
+
+        /* NAVBAR */
+        .navbar { background-color: var(--primary-dark); padding: 1.5rem 2rem; transition: 0.4s; }
+        .navbar-brand { font-size: 1.8rem; font-weight: 700; color: #fff !important; letter-spacing: 3px; text-transform: uppercase; }
+        .nav-link { color: #fff !important; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; margin: 0 15px; transition: 0.3s; }
+        .nav-link:hover { color: var(--accent-light) !important; }
+        
+        .btn-outline-light {
+            border-radius: 0; padding: 10px 25px; text-transform: uppercase; font-size: 0.8rem;
+            letter-spacing: 2px; font-weight: 600; border: 1px solid #fff; transition: 0.3s;
+        }
+        .btn-outline-light:hover { background-color: var(--accent-color); color: #fff; border-color: var(--accent-color); }
+
+        /* HERO SECTION */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent-color) 100%);
+            height: 85vh; display: flex; align-items: center; justify-content: center; text-align: center; color: #fff;
+            padding-top: 100px;
+        }
+        .hero h1 { font-size: clamp(3rem, 5vw, 5rem); font-weight: 300; margin-bottom: 20px; line-height: 1.1; letter-spacing: 1px; max-width: 900px; }
+        .hero p { font-size: 1.2rem; font-weight: 300; letter-spacing: 2px; margin-bottom: 40px; color: var(--accent-light); }
+
+        /* TÍTULOS DE SECÇÃO */
+        .section-title { text-align: center; font-size: 2.5rem; font-weight: bold; margin-bottom: 4rem; text-transform: uppercase; letter-spacing: 3px; color: var(--primary-dark); }
+
+        /* SERVICES */
+        .services-section { padding: 120px 0; background-color: #fff; }
+        .service-card { padding: 50px 40px; border: 1px solid #eee; height: 100%; transition: all 0.4s ease; cursor: default; background: var(--secondary-light); }
+        .service-card:hover { background-color: var(--primary-dark); color: #fff; box-shadow: 0 20px 40px rgba(74,46,53,0.15); transform: translateY(-5px); }
+        .service-card h3 { font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-color); }
+        .service-card:hover h3 { color: var(--accent-light); }
+        .service-card p { font-size: 0.95rem; line-height: 1.7; opacity: 0.9; }
+
+        /* ABOUT */
+        .about-section { padding: 120px 0; background-color: var(--secondary-light); }
+        .about-text h2 { font-size: 3rem; font-weight: 300; margin-bottom: 30px; line-height: 1.2; color: var(--primary-dark); }
+        .about-text p { font-size: 1.1rem; line-height: 1.8; color: #555; margin-bottom: 20px; }
+        .css-image-placeholder {
+            width: 100%; height: 600px; background: linear-gradient(45deg, var(--accent-color), var(--accent-light));
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 2rem; font-weight: 700; letter-spacing: 5px; text-transform: uppercase;
+        }
+
+        /* REVIEWS */
+        .reviews-section { padding: 120px 0; background-color: #fff; }
+        .review-box { background-color: var(--secondary-light); padding: 50px; height: 100%; border-top: 4px solid var(--accent-color); }
+        .stars { color: var(--accent-color); margin-bottom: 20px; font-size: 1.2rem; }
+        .review-text { font-size: 1.05rem; line-height: 1.8; font-style: italic; margin-bottom: 30px; }
+        .review-author { font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; color: var(--primary-dark); }
+
+        /* =========================================
+           SESSÃO DA EQUIPE
+           ========================================= */
+        /* O valor 100px 0 aplica espaço em cima e EMBAIXO da seção */
+        .team-section { padding: 100px 0; background-color: var(--secondary-light); }
+        .team-section .section-title { color: var(--primary-dark); margin-bottom: 3rem; }
+        
+        .team-card {
+            position: relative;
+            aspect-ratio: 3/4;
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .team-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 60%);
+            transition: 0.4s;
+        }
+        .team-card:hover::before {
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.3) 60%);
+        }
+        .team-info {
+            position: relative;
+            z-index: 1;
+            color: #fff;
+            transition: transform 0.4s;
+        }
+        .team-card:hover .team-info {
+            transform: translateY(-10px);
+        }
+        .team-info p {
+            font-family: Georgia, serif;
+            font-size: 0.9rem;
+            font-style: italic;
+            margin-bottom: 8px;
+            color: #e2e2e2;
+        }
+        .team-info h4 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+            color: #fff;
+        }
+
+        /* FOOTER */
+        footer { background-color: var(--primary-dark); color: #fff; padding: 100px 0 40px; border-top: 1px solid var(--accent-color); }
+        .footer-logo { font-size: 2.5rem; font-weight: 700; letter-spacing: 4px; margin-bottom: 30px; text-transform: uppercase; color: var(--accent-light); }
+        .footer-links h5 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; color: var(--accent-light); }
+        .footer-links a { color: #ddd; text-decoration: none; display: block; margin-bottom: 15px; transition: 0.3s; font-size: 0.9rem; }
+        .footer-links a:hover { color: #fff; padding-left: 5px; }
+        
+        .newsletter input { background: transparent; border: none; border-bottom: 1px solid var(--accent-color); color: #fff; border-radius: 0; padding: 15px 0; width: 100%; margin-bottom: 20px; outline: none; }
+        .newsletter input:focus { border-color: #fff; }
+        .newsletter button { background: var(--accent-color); border: none; color: #fff; padding: 10px 20px; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; transition: 0.3s; font-weight: bold; }
+        .newsletter button:hover { background: #fff; color: var(--primary-dark); }
+        
+        .footer-bottom { margin-top: 80px; padding-top: 30px; border-top: 1px solid var(--accent-color); text-align: center; color: #ddd; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid px-lg-5">
+            <a class="navbar-brand" href="/">Espaço Beauty</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-toggle="target="#navbarNav">
+                <i class="bi bi-list text-white" style="font-size: 1.5rem;"></i>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="#servicos">Serviços</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#sobre">Sobre</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#equipa">Equipe</a></li>
+                    <li class="nav-item ms-lg-4"><a class="nav-link" style="color: var(--accent-light) !important; font-weight: bold;" href="/cadastro">Cadastrar</a></li>
+                    <li class="nav-item ms-lg-2"><a class="btn btn-outline-light" href="/login">Agende aqui!!</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Um bom cabelo reflete a sua história e o seu espírito.</h1>
+            <p>ARTE, ESTILO E COMUNIDADE EM CADA CORTE.</p>
+            <a href="/login" class="btn btn-outline-light mt-4 px-5 py-3">Agende agora</a>
+        </div>
+    </section>
+
+    <section id="servicos" class="services-section">
+        <div class="container">
+            <h2 class="section-title">Nossos Serviços</h2>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="service-card">
+                        <h3>✂️ CABELOS & TRATAMENTOS</h3>
+                        <p>Oferecemos cortes personalizados masculinos e femininos através do visagismo, além de colorações e técnicas modernas de iluminação. Cuidamos da saúde dos seus fios com alisamentos seguros e tratamentos intensivos de reconstrução e cronograma capilar.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="service-card">
+                        <h3>💅 MANICURE & PEDICURE</h3>
+                        <p>Garantimos o embelezamento completo de suas mãos e pés com serviços tradicionais de cuticulagem e esmaltações de longa durabilidade em gel. Somos especialistas em alongamentos de alta resistência e relaxantes sessões de spa dos pés.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="service-card">
+                        <h3>🪢 TRANÇAS & FINALIZAÇÃO</h3>
+                        <p>Expresse sua identidade e estilo com nossa arte em tranças de raiz, nagô e box braids seguras para os fios. Desenvolvemos penteados sob medida, escovas modeladas e presos elegantes para você brilhar em casamentos ou formaturas.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="service-card">
+                        <h3>🍯 ESTÉTICA & BEM-ESTAR</h3>
+                        <p>Proporcione o cuidado ideal que a sua pele merece através de sessões completas de limpeza facial profunda. Realizamos designs de sobrancelhas personalizados com aplicação de henna e depilações corporais e faciais suaves com cera ou linha.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="sobre" class="about-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0 pe-lg-5">
+                    <div class="about-text">
+                        <h2>Experiência e Maestria Criativa em Cada Detalhe</h2>
+                        <p>No Estudio Beauty, acreditamos que o seu cabelo é a expressão máxima da sua personalidade. Nossa equipe de especialistas une técnica e paixão para criar visuais que acompanham as últimas tendências, sem perder a essência que torna você única. Mais do que um salão, oferecemos uma vivência de autocuidado sofisticada e descomplicada, onde a nossa inovação digital existe para garantir que cada momento do seu atendimento seja impecável e desenhado exclusivamente para o seu conforto.</p>
+                        <p>No Estudio Beauty, acreditamos que o seu cabelo é a expressão máxima da sua personalidade. Nossa equipe de especialistas une técnica e paixão para criar visuais que acompanham as últimas tendências, sem perder a essência que torna você única. Mais do que um salão, oferecemos uma vivência de autocuidado sofisticada e descomplicada, onde a nossa inovação digital existe para garantir que cada momento do seu atendimento seja impecável e desenhado exclusivamente para o seu conforto.</p>
+                        <a href="/login" class="btn mt-3 px-4 py-2 rounded-0" style="letter-spacing: 2px; border: 1px solid var(--primary-dark); color: var(--primary-dark); font-weight: bold;">Descubra Mais</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                <img src="/salabelezalanding.jpg" alt="Mulher sendo atendida no salão" class="img-fluid" style="border-radius: 20px; box-shadow: 0 15px 35px rgba(74,46,53,0.15);">
+            </div>
+
+        </div>
+    </div>
+</section>
+
+    <section class="reviews-section">
+        <div class="container">
+            <h2 class="section-title">O Que Dizem os Nossos Clientes</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="review-box">
+                        <div class="stars">★★★★★</div>
+                        <p class="review-text">"Simplesmente maravilhoso! Realizei um corte e um tratamento intensivo que devolveram todo o brilho e vida aos meus fios. O atendimento é impecável e a equipe do Espaço Beauty entende exatamente o que o cabelo precisa. Recomendo muito!"</p>
+                        <p class="review-author">Mariana Oliveira</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="review-box">
+                        <div class="stars">★★★★★</div>
+                        <p class="review-text">"Sempre faço minhas unhas e sobrancelhas aqui e o resultado é perfeito. O design é super natural e o spa dos pés é extremamente relaxante. O cuidado com a higiene e a pontualidade no atendimento fazem toda a diferença para mim."</p>
+                        <p class="review-author">Camila Souza</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="review-box">
+                        <div class="stars">★★★★★</div>
+                        <p class="review-text">"Apaixonada pelas tranças que fiz! O acabamento é impecável, super confortável e durou muito tempo. Além da habilidade técnica incrível, o ambiente é muito acolhedor e o atendimento personalizado torna a experiência no Espaço Beauty ainda mais especial e única."</p>
+                        <p class="review-author">Beatriz Mendes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="equipa" class="team-section">
+        <div class="container mb-5">
+            <h2 class="section-title m-0">A Nossa Equipe</h2>
+        </div>
+        
+        <div class="container-fluid px-0">
+            <div class="row g-0">
+                
+                <!-- Carol -->
+                <div class="col-12 col-sm-6 col-lg">
+                    <div class="team-card" style="background-image: url('https://images.pexels.com/photos/6503332/pexels-photo-6503332.jpeg');">
+                        <div class="team-info">
+                            <p>Cabeleleira / Manicure</p>
+                            <h4>Carol</h4>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Thamires -->
+                <div class="col-12 col-sm-6 col-lg">
+                    <div class="team-card" style="background-image: url('https://images.pexels.com/photos/14267564/pexels-photo-14267564.jpeg');">
+                        <div class="team-info">
+                            <p>Cabeleleira / Manicure</p>
+                            <h4>Thamires</h4>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bertoldo -->
+                <div class="col-12 col-sm-6 col-lg">
+                    <div class="team-card" style="background-image: url('https://images.pexels.com/photos/28383173/pexels-photo-28383173.jpeg');">
+                        <div class="team-info">
+                            <p>Trancista / Designer / Esteticista</p>
+                            <h4>Bertoldo</h4>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Beatriz -->
+                <div class="col-12 col-sm-6 col-lg">
+                    <div class="team-card" style="background-image: url('https://images.pexels.com/photos/10751388/pexels-photo-10751388.jpeg');">
+                        <div class="team-info">
+                            <p>Cabeleireira / Penteados</p>
+                            <h4>Beatriz</h4>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <div class="footer-logo">LOGIC BEAUTY</div>
+                    <p style="color: #ddd; max-width: 300px; font-size: 0.9rem; line-height: 1.8;">
+                        Espaço Beauty<br>
+                        Sistema Integrado de Gestão para Salões e Profissionais.
+                    </p>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0 footer-links">
+                    <h5>Menu</h5>
+                    <a href="#servicos">Serviços</a>
+                    <a href="#sobre">Sobre Nós</a>
+                    <a href="#equipa">A Equipe</a>
+                    <a href="/login">Book Now</a>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0 footer-links">
+                    <h5>Info</h5>
+                    <a href="#">Políticas</a>
+                    <a href="#">Carreiras</a>
+                    <a href="#">Cartões Oferta</a>
+                </div>
+                <div class="col-lg-4 col-md-4 newsletter">
+                    <h5>Fique Atualizado</h5>
+                    <form onsubmit="event.preventDefault(); alert('Subscrito com sucesso!');">
+                        <input type="email" placeholder="O seu endereço de e-mail" required>
+                        <button type="submit">Subscrever</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Logic Beauty - Fatec ZS. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        window.addEventListener('scroll', function() {
+            var navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.backgroundColor = '#4A2E35';
+                navbar.style.boxShadow = '0 5px 15px rgba(0,0,0,0.3)';
+            } else {
+                navbar.style.backgroundColor = '#4A2E35';
+                navbar.style.boxShadow = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

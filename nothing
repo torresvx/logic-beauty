@@ -1,0 +1,85 @@
+USE beuaty_logic;
+
+
+
+DROP TABLE IF EXISTS fidelidade_pontos;
+
+DROP TABLE IF EXISTS agendamento;
+
+DROP TABLE IF EXISTS usuarios;
+
+DROP TABLE IF EXISTS servicos;
+
+
+
+
+
+CREATE TABLE servicos (
+
+  id_servico INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+
+  nome_servico VARCHAR(50) NOT NULL,
+
+  descricao_servico VARCHAR(255) NOT NULL,
+
+  preco_servico DECIMAL(10,2) NOT NULL,
+
+  duracao_estimada_servico TIME NOT NULL
+
+);
+
+
+
+CREATE TABLE usuarios (
+
+  id_usuarios INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+
+  nome VARCHAR(100) NOT NULL,
+
+  usuario_email VARCHAR(100) NOT NULL UNIQUE,
+
+  usuario_senha VARCHAR(255) NOT NULL,
+
+  usuario_telefone VARCHAR(20) NOT NULL,
+
+  data_nascimento DATE NOT NULL,
+
+  usuario_tipo ENUM('cliente', 'cabeleireira', 'admin') NOT NULL DEFAULT 'cliente'
+
+);
+
+
+
+CREATE TABLE agendamento (
+
+  id_agendamento INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+
+  usuarios_id_usuarios INT NOT NULL, /* O Cliente */
+
+  profissional_id_usuarios INT NOT NULL, /* A Cabeleireira */
+
+  servicos_id_servico INT NOT NULL,
+
+  data_hora_agendamento DATETIME NOT NULL,
+
+  status_agendamento ENUM('pendente', 'confirmado', 'concluido', 'cancelado') DEFAULT 'pendente',
+
+  FOREIGN KEY (usuarios_id_usuarios) REFERENCES usuarios(id_usuarios),
+
+  FOREIGN KEY (profissional_id_usuarios) REFERENCES usuarios(id_usuarios),
+
+  FOREIGN KEY (servicos_id_servico) REFERENCES servicos(id_servico)
+
+);
+
+CREATE TABLE fidelidade_pontos (
+
+  id_fidelidade INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+
+  usuarios_id_usuarios INT NOT NULL,
+
+  pontos_acumulados_fidelidade DECIMAL(10,2) NOT NULL DEFAULT 0,
+
+  FOREIGN KEY (usuarios_id_usuarios) REFERENCES usuarios(id_usuarios)
+
+);

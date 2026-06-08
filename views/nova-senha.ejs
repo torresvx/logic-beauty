@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Nova Senha - Logic Beauty</title>
+    <style>
+        /* CSS exato do painel administrativo */
+        :root {
+            --sidebar-dark: #4A2E35;
+            --accent-gold: #f4C2C2;
+            --bg-light: #F1F1F1;
+            --success-green: #B76E79;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-light); display: flex; height: 100vh; overflow: hidden; color: #4A2E35; }
+
+        .sidebar { width: 80px; background-color: var(--sidebar-dark); display: flex; flex-direction: column; align-items: center; padding-top: 20px; }
+        .sidebar-logo { width: 40px; height: 40px; border: 2px solid var(--accent-gold); border-radius: 8px; margin-bottom: 40px; display: flex; justify-content: center; align-items: center; color: var(--accent-gold); font-weight: bold; }
+        .menu-icon { width: 100%; padding: 20px 0; text-align: center; color: rgba(241, 241, 241, 0.5); font-size: 1.5rem; cursor: pointer; text-decoration: none; }
+        
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .top-nav { background-color: white; padding: 0 40px; display: flex; gap: 30px; border-bottom: 1px solid #eaeaec; height: 60px; align-items: center; flex-shrink: 0; }
+        .tab-btn { background: none; border: none; padding: 18px 0; color: var(--sidebar-dark); font-size: 0.95rem; font-weight: 600; border-bottom: 3px solid var(--sidebar-dark); }
+
+        .view-container { display: flex; gap: 30px; align-items: flex-start; padding: 30px; height: calc(100vh - 60px); overflow-y: auto; }
+        
+        .left-panel { width: 400px; background-color: #faf9fa; border: 1px solid #eaeaec; border-radius: 12px; padding: 25px; display: flex; flex-direction: column; flex-shrink: 0; }
+        .left-panel h3 { margin-bottom: 25px; color: var(--sidebar-dark); font-size: 1.1rem; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 0.85rem; margin-bottom: 8px; color: var(--sidebar-dark); font-weight: 600; }
+        .form-group input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; outline: none; font-size: 0.9rem; color: var(--sidebar-dark); }
+        .form-group input:focus { border-color: var(--accent-gold); }
+        
+        .senha-container { position: relative; display: flex; align-items: center; }
+        .btn-olho { position: absolute; right: 10px; background: none; border: none; cursor: pointer; font-size: 1.2rem; color: #888; }
+        
+        .btn-submit { background-color: var(--success-green); color: white; border: none; padding: 15px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .btn-submit:hover { background-color: #4A2E35; }
+        
+        .right-panel { flex: 1; background-color: white; border-radius: 12px; padding: 40px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); overflow-y: auto; max-height: 100%; }
+        .system-title { font-size: 2.2rem; font-weight: 300; margin-bottom: 10px; color: var(--sidebar-dark); }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-logo">LB</div>
+        <a href="/login" class="menu-icon" title="Sair">🚪</a>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-nav">
+            <div class="tab-btn">Redefinição de Senha</div>
+        </header>
+
+        <div class="view-container">
+            <section class="left-panel">
+                <h3>Criar Nova Senha</h3>
+                <form action="/salvar-nova-senha" method="POST" style="display: flex; flex-direction: column;">
+                    
+                    <div class="form-group">
+                        <label>Nova Senha</label>
+                        <div class="senha-container">
+                            <input type="password" id="novaSenha" name="nova_senha" placeholder="No mínimo 6 caracteres" required>
+                            <button type="button" class="btn-olho" onclick="mostrarSenha('novaSenha')">👁️</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Confirmar Nova Senha</label>
+                        <div class="senha-container">
+                            <input type="password" id="confirmaSenha" name="confirmar_senha" placeholder="Repita a nova senha" required>
+                            <button type="button" class="btn-olho" onclick="mostrarSenha('confirmaSenha')">👁️</button>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-submit">✓ Salvar Nova Senha</button>
+                </form>
+            </section>
+
+            <section class="right-panel">
+                <h1 class="system-title">LOGIC BEAUTY</h1>
+                <p style="color: #888; margin-bottom: 40px;">Segurança da Conta</p>
+                <div style="color: #666; line-height: 1.6;">
+                    <p style="color: var(--success-green); font-weight: bold; margin-bottom: 15px;">✓ Identidade verificada com sucesso!</p>
+                    <p>Agora você pode escolher uma nova senha para acessar o sistema.</p><br>
+                    <p>• <strong>Dica de Segurança:</strong> Misture letras, números e símbolos.</p>
+                    <p>• Após salvar, você será redirecionado automaticamente para a tela de login inicial.</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        function mostrarSenha(idInput) {
+            var input = document.getElementById(idInput);
+            if (input.type === "password") input.type = "text";
+            else input.type = "password";
+        }
+    </script>
+</body>
+</html>

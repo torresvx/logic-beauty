@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Logic Beauty</title>
+    <style>
+        /* Reset e Cores Atualizadas */
+        :root {
+            --sidebar-dark: #4A2E35;    /* Roxo Aralendo - Barra lateral escura */
+            --accent-gold: #f4C2C2;     /* Rosa Quartzo (#f4C2C2) - Destaques e bordas ativas */
+            --bg-light: #F1F1F1;        /* Cinza Claro - Fundo principal da aplicação */
+            --success-green: #B76E79;   /* Rose Bold - Cor para o botão de confirmação principal */
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-light); display: flex; height: 100vh; overflow: hidden; color: #4A2E35; }
+
+        /* Sidebar e Navegação */
+        .sidebar { width: 80px; background-color: var(--sidebar-dark); display: flex; flex-direction: column; align-items: center; padding-top: 20px; }
+        .sidebar-logo { width: 40px; height: 40px; border: 2px solid var(--accent-gold); border-radius: 8px; margin-bottom: 40px; display: flex; justify-content: center; align-items: center; color: var(--accent-gold); font-weight: bold; }
+        .menu-icon { width: 100%; padding: 20px 0; text-align: center; color: rgba(241, 241, 241, 0.5); font-size: 1.5rem; cursor: pointer; text-decoration: none; }
+        .menu-icon.active { color: #F1F1F1; background-color: rgba(255, 255, 255, 0.1); border-left: 3px solid var(--accent-gold); }
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .top-nav { background-color: white; padding: 0 40px; display: flex; gap: 30px; border-bottom: 1px solid #eaeaec; height: 60px; align-items: center; flex-shrink: 0; }
+        .tab-btn { background: none; border: none; padding: 18px 0; color: #B76E79; cursor: pointer; font-size: 0.95rem; font-weight: 600; border-bottom: 3px solid transparent; transition: 0.3s; font-family: inherit; }
+        .tab-btn.active-tab { color: var(--sidebar-dark); border-bottom: 3px solid var(--sidebar-dark); }
+
+        /* Containers de Conteúdo */
+        .view-container { display: none; padding: 30px; height: calc(100vh - 60px); overflow-y: auto; }
+        .view-container.active-view { display: flex; gap: 30px; align-items: flex-start; } /* Correção de alinhamento */
+        .view-container.block-view { display: block; }
+
+        /* Formulários e Paineis */
+        .left-panel { width: 400px; background-color: #faf9fa; border: 1px solid #eaeaec; border-radius: 12px; padding: 25px; display: flex; flex-direction: column; flex-shrink: 0; } /* Impedindo o form de espremer */
+        .left-panel h3 { margin-bottom: 25px; color: var(--sidebar-dark); font-size: 1.1rem; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 0.85rem; margin-bottom: 8px; color: var(--sidebar-dark); font-weight: 600; }
+        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; outline: none; font-size: 0.9rem; color: var(--sidebar-dark); }
+        .form-group input:focus, .form-group select:focus { border-color: var(--accent-gold); }
+        
+        /* Olhinho da Senha */
+        .senha-container { position: relative; display: flex; align-items: center; }
+        .btn-olho { position: absolute; right: 10px; background: none; border: none; cursor: pointer; font-size: 1.2rem; color: var(--text-light); }
+        
+        .btn-submit { background-color: var(--success-green); color: white; border: none; padding: 15px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .btn-submit:hover { background-color: #4A2E35; }
+        
+        /* Ajuste do painel direito para rolagem independente da tabela */
+        .right-panel { flex: 1; background-color: white; border-radius: 12px; padding: 40px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); overflow-y: auto; max-height: 100%; }
+        .system-title { font-size: 2.2rem; font-weight: 300; margin-bottom: 10px; color: var(--sidebar-dark); }
+
+        /* Tabela e Badges */
+        .table-card { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { text-align: left; padding: 15px; border-bottom: 2px solid #eee; color: var(--text-light); font-size: 0.8rem; text-transform: uppercase; }
+        td { padding: 15px; border-bottom: 1px solid #eee; font-size: 0.95rem; color: var(--sidebar-dark); }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; }
+        
+        /* Badges customizados combinando a nova paleta */
+        .badge-admin { background: rgba(74, 46, 53, 0.15); color: #4A2E35; }
+        .badge-cabeleireira { background: rgba(183, 110, 121, 0.2); color: #B76E79; }
+        .badge-cliente { background: rgba(116, 194, 194, 0.25); color: #2D6A6A; }
+
+        /* Modal de Edição */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(74, 46, 53, 0.6); z-index: 100; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 30px; border-radius: 12px; width: 400px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .btn-fechar { background: #4A2E35; color: #F1F1F1; border: none; padding: 15px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-left: 10px; margin-top: 10px; transition: 0.3s; }
+        .btn-fechar:hover { background: #B76E79; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-logo">LB</div>
+        <div class="menu-icon active">💼</div>
+        <a href="/" class="menu-icon" style="margin-top: auto; margin-bottom: 20px;">🚪</a>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-nav">
+            <button type="button" id="tab-geral" class="tab-btn active-tab" onclick="mudarAba('geral', this)">Visão Geral & Equipe</button>
+            <button type="button" id="tab-contas" class="tab-btn" onclick="mudarAba('contas', this)">Contas Cadastradas</button>
+            <button type="button" id="tab-servicos" class="tab-btn" onclick="mudarAba('servicos', this)">Gestão de Serviços</button>
+        </header>
+
+        <div id="view-geral" class="view-container active-view">
+            <section class="left-panel">
+                <h3>Cadastrar Novo Profissional</h3>
+                <form action="/admin/cadastrar-cabeleireira" method="POST" style="display: flex; flex-direction: column;">
+                    <div class="form-group">
+                        <label for="adminNome">Nome Completo</label>
+                        <input type="text" id="adminNome" name="nome" placeholder="Ex: Maria Silva" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminEmail">E-mail de Acesso</label>
+                        <input type="email" id="adminEmail" name="email" placeholder="maria@logicbeauty.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminSenha">Senha Temporária</label>
+                        <div class="senha-container">
+                            <input type="password" id="adminSenha" name="senha" placeholder="Mínimo 6 caracteres" required>
+                            <button type="button" class="btn-olho" onclick="mostrarSenha('adminSenha')">👁️</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminTelefone">Numero da cabeleleira</label>
+                        <input type="text" id="adminTelefone" name="telefone" placeholder="(11)911111111" required>
+                    </div>
+                    <button type="submit" class="btn-submit">✓ Concluir Cadastro</button>
+                </form>
+            </section>
+            <section class="right-panel">
+                <h1 class="system-title">LOGIC BEAUTY</h1>
+                <p style="color: #888; margin-bottom: 40px;">Painel Administrativo v1.0</p>
+                <div style="color: #666; line-height: 1.6;">
+                    <p>Bem-vinda, Administradora. Use o formulário à esquerda para expandir sua equipe.</p><br>
+                    <p>• <strong>Cabeleireiras:</strong> Terão acesso à própria agenda e lucros.</p>
+                    <p>• <strong>Segurança:</strong> As senhas cadastradas aqui podem ser alteradas pelo usuário depois.</p>
+                </div>
+            </section>
+        </div>
+
+        <div id="view-contas" class="view-container block-view" style="display: none;">
+            <div class="table-card">
+                <h2>Usuários do Sistema</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>E-mail</th>
+                            <th>Senha</th>
+                            <th>numero</th>
+                            <th>Tipo</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (contas && contas.length > 0) { %>
+                            <% contas.forEach(conta => { %>
+                                <tr>
+                                    <td>#<%= conta.id_usuarios %></td>
+                                    <td><strong><%= conta.nome %></strong></td>
+                                    <td><%= conta.usuario_email %></td>
+                                    <td style="color: #e74c3c; font-family: monospace;"><%= conta.usuario_senha %></td>
+                                    <td style="color: #2D6A6A; font-family: monospace;"><%= conta.usuario_telefone %></td>
+                                    <td><span class="badge badge-<%= conta.usuario_tipo %>"><%= conta.usuario_tipo %></span></td>
+                                    <td>
+                                        <button type="button" onclick="abrirModalEditar('<%= conta.id_usuarios %>', '<%= conta.nome %>', '<%= conta.usuario_email %>', '<%= conta.usuario_telefone %>', '<%= conta.usuario_senha %>' ,'<%= conta.usuario_tipo %>',)" style="color: #3498db; background: none; border: none; cursor: pointer; font-weight: bold; font-family: inherit; font-size: inherit;">Editar</button>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        <% } else { %>
+                            <tr><td colspan="6">Nenhuma conta encontrada.</td></tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="view-servicos" class="view-container active-view" style="display: none;">
+            <section class="left-panel">
+                <h3>Cadastrar Novo Serviço</h3>
+                <form action="/admin/cadastrar-servico" method="POST" style="display: flex; flex-direction: column;">
+                    <div class="form-group">
+                        <label>Nome do Serviço</label>
+                        <input type="text" name="nome_servico" placeholder="Ex: Limpeza de pés" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição</label>
+                        <input type="text" name="descricao_servico" placeholder="Detalhes do serviço" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Preço (R$)</label>
+                        <input type="number" step="0.01" name="preco_servico" placeholder="0.00" required>
+                    </div>
+                    <div class="form-group">
+                         <label>Duração Estimada</label>
+                        <input type="time" name="duracao_estimada_servico" required>
+                    </div>
+                    <button type="submit" class="btn-submit">✓ Salvar Serviço</button>
+                </form>
+            </section>
+            <section class="right-panel">
+                <h3>Serviços Cadastrados</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Serviço</th>
+                            <th>Preço</th>
+                            <th>Ação</th> 
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        <% if (servicos && servicos.length > 0) { %>
+                            <% servicos.forEach(s => { %>
+                                <tr>
+                                    <td>#<%= s.id_servico %></td>
+                                    <td><strong><%= s.nome_servico %></strong></td>
+                                    <td>R$ <%= parseFloat(s.preco_servico).toFixed(2) %></td>
+                                    <td>
+                                        <button type="button" 
+                                                style="color: #e74c3c; background: none; border: none; cursor: pointer; font-weight: bold;" 
+                                                onclick="deletarServico('<%= s.id_servico %>')">
+                                            ✕ Excluir
+                                        </button>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        <% } else { %>
+                            <tr><td colspan="4">Nenhum serviço cadastrado.</td></tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+    
+
+    <div id="modalEditar" class="modal-overlay">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 20px; color: #333;">Editar Conta</h3>
+        <form action="/admin/editar-conta" method="POST" style="display: flex; flex-direction: column;">
+            <input type="hidden" id="editId" name="id_usuario">
+            
+            <div class="form-group">
+                <label for="editNome">Nome Completo</label>
+                <input type="text" id="editNome" name="nome" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="editEmail">E-mail</label>
+                <input type="email" id="editEmail" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="editSenha">Senha</label>
+                <input type="text" id="editSenha" name="senha" required>
+            </div>
+
+            <div class="form-group">
+                <label for="editTelefone">telefone</label>
+                <input type="text" id="editTelefone" name="telefone" required>
+            </div>
+
+            
+            <div class="form-group">
+                <label for="editTipo">Tipo de Acesso</label>
+                <select id="editTipo" name="tipo">
+                    <option value="cliente">Cliente</option>
+                    <option value="cabeleireira">Cabeleireira</option>
+                    <option value="admin">Administrador</option>
+                </select>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between;">
+                <button type="submit" class="btn-submit" style="flex: 1;">Salvar Alterações</button>
+                <button type="button" class="btn-fechar" onclick="fecharModalEditar()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function mudarAba(aba, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab'));
+            btn.classList.add('active-tab');
+            document.getElementById('view-geral').style.display = 'none';
+            document.getElementById('view-contas').style.display = 'none';
+            document.getElementById('view-servicos').style.display = 'none';
+            if (aba === 'geral') document.getElementById('view-geral').style.display = 'flex';
+            else if (aba === 'contas') document.getElementById('view-contas').style.display = 'block';
+            else document.getElementById('view-servicos').style.display = 'flex';
+        }
+
+        function mostrarSenha(idInput) {
+            var input = document.getElementById(idInput);
+            if (input.type === "password") input.type = "text";
+            else input.type = "password";
+        }
+
+        function fecharModalEditar() {
+            document.getElementById('modalEditar').style.display = 'none';
+        }
+        function deletarServico(id) {
+        if (confirm("Tem certeza que deseja excluir este serviço?")) {
+            fetch(`/admin/deletar-servico/${id}`, {
+                method: 'POST'
+            })
+            .then(response => {
+                if (response.ok) {
+                    location.reload(); // Recarrega para sumir com a linha da tabela
+                } else {
+                    alert("Erro ao excluir serviço.");
+                }
+            })
+            .catch(error => console.error('Erro:', error));
+        }
+    }
+        function abrirModalEditar(id, nome, email, telefone, senha, tipo) {
+            document.getElementById('editId').value = id;
+            document.getElementById('editNome').value = nome;
+            document.getElementById('editEmail').value = email;
+            document.getElementById('editSenha').value = senha;
+            document.getElementById('editTelefone'). value = telefone;
+            
+            // Define o valor do select de acordo com o tipo atual
+            const selectTipo = document.getElementById('editTipo');
+            selectTipo.value = tipo; 
+            
+            document.getElementById('modalEditar').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>

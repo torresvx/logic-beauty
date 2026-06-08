@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Área do Cliente - Espaço Beauty</title>
+    <style>
+        /* Paleta de Cores Atualizada */
+        :root {
+            --bg-outer: #4A2E35;       /* Roxo Aralendo - Fundo externo */
+            --bg-app: #F1F1F1;         /* Cinza Claro - Fundo principal do app */
+            --bg-sidebar: #e5d2d6;     /* Variação suave baseada no Rose Bold para a sidebar */
+            --bg-card: #f4C2C2;        /* Rosa Quartzo (#f4C2C2) - Fundo dos cartões */
+            --text-dark: #4A2E35;      /* Roxo Aralendo - Textos principais e títulos */
+            --text-light: #B76E79;     /* Rose Bold - Textos secundários e descrições */
+            --accent-pink: #B76E79;    /* Rose Bold - Destaque alternativo (ex: pílulas futuras) */
+            --accent-teal: #4A2E35;    /* Roxo Aralendo - Botões e elementos de ação principais */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-outer); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+
+        .app-container { width: 100%; max-width: 1200px; height: 90vh; background-color: var(--bg-app); border-radius: 30px; display: flex; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.15); }
+
+        /* Sidebar */
+        .sidebar { width: 260px; background-color: var(--bg-sidebar); padding: 40px 20px; display: flex; flex-direction: column; }
+        .logo-area { margin-bottom: 40px; text-align: center; }
+        .logo-area h2 { color: var(--text-dark); font-size: 1.5rem; letter-spacing: 1px; }
+        .logo-area span { color: var(--text-light); font-size: 0.8rem; text-transform: uppercase; font-weight: bold; }
+        .menu-item { padding: 15px 20px; margin-bottom: 10px; border-radius: 20px; color: var(--text-dark); font-weight: bold; font-size: 0.95rem; cursor: pointer; transition: 0.3s; text-decoration: none; display: block; border: none; background: none; text-align: left; width: 100%; }
+        .menu-item.active, .menu-item:hover { background-color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .logout-btn { margin-top: auto; color: var(--text-dark); font-weight: bold; text-decoration: none; padding: 0 20px; }
+
+        /* Área Principal */
+        .main-content { flex: 1; padding: 50px; display: flex; flex-direction: column; overflow-y: auto; }
+        .header { margin-bottom: 40px; }
+        .header h1 { color: var(--text-dark); font-size: 2rem; font-weight: 300; letter-spacing: 1px; }
+        .header p { color: var(--text-light); font-size: 1rem; margin-top: 5px; }
+
+        /* Telas das Abas */
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+
+        /* Novo Grid para Formulário e Próximos Agendamentos */
+        .dashboard-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; align-items: start; }
+
+        /* Cartões */
+        .card { background-color: var(--bg-card); border-radius: 20px; padding: 35px; }
+        .card h3 { color: var(--text-dark); margin-bottom: 25px; font-weight: 400; }
+        .card-transparent { background-color: transparent; border: 2px dashed var(--text-light); padding: 35px; border-radius: 20px; }
+        
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: bold; color: var(--text-dark); margin-bottom: 8px; text-transform: uppercase; }
+        .form-group select, .form-group input { width: 100%; padding: 15px; border: none; border-radius: 12px; background-color: #F1F1F1; color: var(--text-dark); font-size: 1rem; outline: none; }
+        
+        .btn-submit { width: 100%; padding: 15px; border: none; border-radius: 12px; background-color: var(--accent-teal); color: #F1F1F1; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.3s; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-submit:hover { background-color: #B76E79; color: #F1F1F1; } /* Transiciona para Rose Bold no hover */
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* Pílulas de Agendamento */
+        .agendamento-pill { background: white; border-radius: 15px; padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); border-left: 5px solid var(--bg-card); }
+        .agendamento-pill.futuro { border-left-color: var(--accent-pink); }
+        .agendamento-pill.concluido { border-left-color: var(--text-light); opacity: 0.7; }
+        .pill-data { color: var(--text-dark); font-size: 1.1rem; font-weight: bold; }
+        .pill-hora { color: var(--text-light); font-size: 0.9rem; }
+        .pill-info { text-align: right; }
+        .pill-servico { color: var(--text-dark); font-weight: bold; font-size: 1rem; }
+        .pill-prof { color: var(--text-light); font-size: 0.85rem; }
+        
+        .empty-state { color: var(--text-light); font-size: 0.9rem; font-style: italic; background: rgba(255,255,255,0.5); padding: 20px; border-radius: 15px; text-align: center; }
+
+        /* Toast de sucesso */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--bg-card);
+            color: var(--text-dark);
+            padding: 18px 28px;
+            border-radius: 16px;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 999;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <% 
+        const agora = new Date();
+        const futuros = agendamentos.filter(a => new Date(a.data_hora_agendamento) >= agora);
+        const historicoTotal = agendamentos;
+    %>
+
+    <div class="toast" id="toast"></div>
+
+    <div class="app-container">
+        
+        <aside class="sidebar">
+            <div class="logo-area">
+                <h2>Espaço Beauty</h2>
+                <span>Área do Cliente</span>
+            </div>
+            
+            <button class="menu-item active" onclick="mudarAba('agendar', this)">✨ Novo Agendamento</button>
+            <button class="menu-item" onclick="mudarAba('historico', this)">📅 Meu Histórico</button>
+            
+            <a href="/" class="logout-btn">➜ Sair da Conta</a>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <h1>Olá, <%= nomeCliente %>!</h1>
+                <p>O que vamos fazer hoje para realçar a sua beleza?</p>
+            </header>
+
+            <section id="view-agendar" class="view-section active">
+                <div class="dashboard-grid">
+                    
+                    <div class="card">
+                        <h3>Agende seu Horário</h3>
+                        <form id="form-agendar">
+                            <div class="form-group">
+                                <label for="servico">Escolha o Serviço</label>
+                                <select id="servico" name="servico_id" required>
+                                    <option value="" disabled selected>Selecione um serviço...</option>
+                                    <% servicos.forEach(serv => { %>
+                                        <option value="<%= serv.id_servico %>"><%= serv.nome_servico %> - R$ <%= serv.preco_servico %></option>
+                                    <% }) %>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="profissional">Escolha a Profissional</label>
+                                <select id="profissional" name="profissional_id" required>
+                                    <option value="" disabled selected>Com quem deseja ser atendida?</option>
+                                    <% profissionais.forEach(prof => { %>
+                                        <option value="<%= prof.id_profissional %>"><%= prof.nome %></option>
+                                    <% }) %>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>DATA E HORÁRIO</label>
+                                <div style="display: flex; gap: 10px; margin-top: 5px;">
+                                    <input type="date" id="input_data" required style="flex: 1; padding: 15px; border: none; border-radius: 12px; background-color: #F1F1F1; color: var(--text-dark); font-size: 1rem; outline: none;">
+                                    
+                                    <select id="input_hora" required style="flex: 1; padding: 15px; border: none; border-radius: 12px; background-color: #F1F1F1; color: var(--text-dark); font-size: 1rem; outline: none;">
+                                        <option value="">Horário...</option>
+                                        <option value="09:00">09:00</option>
+                                        <option value="09:30">09:30</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="10:30">10:30</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="11:30">11:30</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="12:30">12:30</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="13:30">13:30</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="14:30">14:30</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="15:30">15:30</option>
+                                        <option value="16:00">16:00</option>
+                                        <option value="16:30">16:30</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="17:30">17:30</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="18:30">18:30</option>
+                                    </select>
+                                </div>
+                                <input type="hidden" name="data_hora" id="data_hora_final">
+                            </div>
+
+                            <button type="submit" class="btn-submit" id="btn-agendar">Confirmar Agendamento</button>
+                        </form>
+                    </div>
+
+                    <div class="card-transparent">
+                        <h3 style="color: var(--accent-teal);">Seus Próximos Horários</h3>
+                        
+                        <div id="lista-proximos">
+                            <% if(futuros.length > 0) { %>
+                                <% futuros.forEach(a => { %>
+                                    <div class="agendamento-pill futuro">
+                                        <div>
+                                            <div class="pill-data"><%= new Date(a.data_hora_agendamento).toLocaleDateString('pt-BR') %></div>
+                                            <div class="pill-hora"><%= new Date(a.data_hora_agendamento).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'}) %></div>
+                                        </div>
+                                        <div class="pill-info">
+                                            <div class="pill-servico"><%= a.nome_servico %></div>
+                                            <div class="pill-prof">Com: <%= a.profissional %></div>
+                                        </div>
+                                    </div>
+                                <% }) %>
+                            <% } else { %>
+                                <div class="empty-state" id="empty-proximos">
+                                    Você ainda não tem compromissos futuros. Marque o seu próximo horário ao lado!
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section id="view-historico" class="view-section">
+                <h3 style="color: var(--text-dark); font-weight: 400; margin-bottom: 25px;">Seus Compromissos (Todos)</h3>
+                
+                <div id="lista-historico">
+                    <% if(historicoTotal.length > 0) { %>
+                        <% historicoTotal.forEach(a => { %>
+                            <div class="agendamento-pill <%= a.status === 'Concluído' ? 'concluido' : 'futuro' %>">
+                                <div>
+                                    <div class="pill-data"><%= new Date(a.data_hora_agendamento).toLocaleDateString('pt-BR') %></div>
+                                    <div class="pill-hora"><%= new Date(a.data_hora_agendamento).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'}) %> • <%= a.status %></div>
+                                </div>
+                                <div class="pill-info">
+                                    <div class="pill-servico"><%= a.nome_servico %></div>
+                                    <div class="pill-prof">Com: <%= a.profissional %></div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <div class="empty-state" id="empty-historico">Nenhum agendamento registado no sistema.</div>
+                    <% } %>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // 1. Funções de Interface (Abas e Toast)
+        function mudarAba(aba, btnClicado) {
+            document.querySelectorAll('.menu-item').forEach(btn => btn.classList.remove('active'));
+            btnClicado.classList.add('active');
+            document.querySelectorAll('.view-section').forEach(view => view.classList.remove('active'));
+            document.getElementById('view-' + aba).classList.add('active');
+        }
+
+        function mostrarToast(msg, cor) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.style.color = "white";
+            t.style.backgroundColor = cor || 'var(--accent-teal)';
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3500);
+        }
+
+        // 2. Atualização Silenciosa da Tabela
+        async function atualizarAgendamentos() {
+            try {
+                const resp = await fetch('/dashboard-cliente');
+                const htmlTexto = await resp.text();
+                const parser = new DOMParser();
+                const novoDoc = parser.parseFromString(htmlTexto, 'text/html');
+
+                const novaListaProximos = novoDoc.getElementById('lista-proximos');
+                const novaListaHistorico = novoDoc.getElementById('lista-historico');
+
+                if (novaListaProximos) document.getElementById('lista-proximos').innerHTML = novaListaProximos.innerHTML;
+                if (novaListaHistorico) document.getElementById('lista-historico').innerHTML = novaListaHistorico.innerHTML;
+            } catch (err) {
+                console.error("Erro ao atualizar lista:", err);
+            }
+        }
+
+        // 3. Inicialização e Lógica do Formulário
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Referências dos Campos
+            const selectServico = document.getElementById('servico');
+            const selectProfissional = document.getElementById('profissional');
+            const inputData = document.getElementById('input_data');
+            const selectHora = document.getElementById('input_hora');
+            const dataHoraFinal = document.getElementById('data_hora_final');
+
+            // --- A. Trava de Data (Passado) ---
+            if (inputData) {
+                const hoje = new Date().toISOString().split('T')[0];
+                inputData.setAttribute('min', hoje);
+            }
+
+            // --- B. Lógica de Serviços e Profissionais ---
+            if (selectServico && selectProfissional) {
+                selectProfissional.disabled = true;
+                selectProfissional.innerHTML = '<option value="">Escolha um serviço primeiro...</option>';
+
+                selectServico.addEventListener('change', function() {
+                    const idServico = this.value;
+                    
+                    if (!idServico) {
+                        selectProfissional.disabled = true;
+                        selectProfissional.innerHTML = '<option value="">Escolha um serviço primeiro...</option>';
+                        selectProfissional.dispatchEvent(new Event('change')); // Força o visual a resetar
+                        return;
+                    }
+
+                    selectProfissional.disabled = true;
+                    selectProfissional.innerHTML = '<option value="">Buscando profissionais...</option>';
+
+                    fetch('/api/profissionais-por-servico/' + idServico)
+                        .then(resposta => resposta.json())
+                        .then(profissionais => {
+                            selectProfissional.innerHTML = '<option value="">Com quem deseja ser atendida?</option>';
+                            if (profissionais.length === 0) {
+                                selectProfissional.innerHTML = '<option value="">Ninguém faz esse serviço :(</option>';
+                            } else {
+                                profissionais.forEach(prof => {
+                                    selectProfissional.innerHTML += `<option value="${prof.id_profissional}">${prof.nome}</option>`;
+                                });
+                                selectProfissional.disabled = false;
+                            }
+                            selectProfissional.dispatchEvent(new Event('change')); // Força atualização das horas
+                        });
+                });
+            }
+
+            // --- C. Lógica Visual de Bloqueio de Dias e Horas Ocupadas ---
+            function atualizarDataHoraFinal() {
+                const dataStr = inputData.value;
+                const horaStr = selectHora.value;
+
+                if (dataStr) {
+                    const dataSelecionada = new Date(dataStr + 'T12:00:00');
+                    const diaSemana = dataSelecionada.getDay();
+
+                    // Bloqueia domingo (0) e segunda (1)
+                    if (diaSemana === 0 || diaSemana === 1) {
+                        alert('Atendemos apenas de Terça a Sábado! Por favor, escolha outra data.');
+                        inputData.value = '';
+                        dataHoraFinal.value = '';
+                        habilitarTodosOsHorarios();
+                        return;
+                    }
+                }
+
+                if (dataStr && horaStr) {
+                    dataHoraFinal.value = `${dataStr}T${horaStr}`;
+                } else {
+                    dataHoraFinal.value = '';
+                }
+            }
+
+            function habilitarTodosOsHorarios() {
+                Array.from(selectHora.options).forEach(opcao => {
+                    if (opcao.value !== "") {
+                        opcao.disabled = false;
+                        opcao.textContent = opcao.value;
+                    }
+                });
+            }
+
+            async function buscarHorariosOcupados() {
+                atualizarDataHoraFinal(); // Valida a data primeiro
+
+                const idProf = selectProfissional.value;
+                const dataEscolhida = inputData.value;
+
+                if (!idProf || !dataEscolhida) {
+                    habilitarTodosOsHorarios();
+                    return;
+                }
+
+                selectHora.disabled = true;
+
+                try {
+                    const resposta = await fetch(`/api/horarios-ocupados/${idProf}/${dataEscolhida}`);
+                    const horariosOcupados = await resposta.json();
+                    
+                    let totalDeHorarios = 0;
+                    let horariosLotados = 0;
+                    let opcaoAtualFicouOcupada = false;
+
+                    Array.from(selectHora.options).forEach(opcao => {
+                        if (opcao.value === "") return;
+                        
+                        totalDeHorarios++;
+                        
+                        if (horariosOcupados.includes(opcao.value)) {
+                            opcao.disabled = true;
+                            opcao.textContent = opcao.value + ' (Ocupado)';
+                            horariosLotados++;
+                            
+                            // Se a cliente já tinha clicado numa hora que agora bloqueou, reseta.
+                            if (selectHora.value === opcao.value) {
+                                opcaoAtualFicouOcupada = true;
+                            }
+                        } else {
+                            opcao.disabled = false;
+                            opcao.textContent = opcao.value;
+                        }
+                    });
+
+                    if (opcaoAtualFicouOcupada) {
+                        selectHora.value = "";
+                        dataHoraFinal.value = "";
+                    }
+
+                    selectHora.disabled = false;
+
+                    if (totalDeHorarios > 0 && totalDeHorarios === horariosLotados) {
+                        mostrarToast('⚠️ A profissional escolhida está com a agenda lotada neste dia! Escolha outra data.', '#d96c88');
+                        inputData.value = ''; 
+                        dataHoraFinal.value = '';
+                        habilitarTodosOsHorarios();
+                    }
+
+                } catch (err) {
+                    console.error("Erro ao buscar horários", err);
+                    selectHora.disabled = false;
+                }
+            }
+
+            // Ativa os gatilhos
+            if (selectProfissional && inputData && selectHora) {
+                selectProfissional.addEventListener('change', buscarHorariosOcupados);
+                inputData.addEventListener('change', buscarHorariosOcupados);
+                selectHora.addEventListener('change', atualizarDataHoraFinal);
+            }
+
+            // --- D. Envio do Formulário ---
+            document.getElementById('form-agendar').addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                // Verifica se a variável oculta foi preenchida corretamente
+                if (!dataHoraFinal.value) {
+                    mostrarToast('⚠️ Por favor, escolha uma data e um horário válidos.', '#d96c88');
+                    return;
+                }
+
+                const btn = document.getElementById('btn-agendar');
+                btn.disabled = true;
+                btn.textContent = 'Agendando...';
+
+                const formData = new FormData(this);
+                const params = new URLSearchParams(formData);
+
+                try {
+                    const resp = await fetch('/cliente/agendar', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: params.toString()
+                    });
+
+                    if (resp.redirected && resp.url.includes('/login')) {
+                        mostrarToast('⚠️ Sessão expirada. Faça login novamente.', '#d96c88');
+                        setTimeout(() => window.location.href = '/login', 2000);
+                        return;
+                    }
+
+                    const dados = await resp.json();    
+
+                    if (dados.ok) {
+                        mostrarToast('✅ ' + dados.mensagem);
+                        this.reset();
+                        dataHoraFinal.value = '';
+                        habilitarTodosOsHorarios(); // Libera tudo para o próximo
+                        selectProfissional.innerHTML = '<option value="">Escolha um serviço primeiro...</option>';
+                        selectProfissional.disabled = true;
+                        await atualizarAgendamentos();
+                    } else {
+                        const detalhe = dados.detalhe ? ` — ${dados.detalhe} (${dados.codigo})` : '';
+                        mostrarToast('❌ ' + dados.mensagem + detalhe, '#d96c88');
+                    }
+
+                } catch (err) {
+                    mostrarToast('❌ Erro de conexão. Verifique o console.', '#d96c88');
+                    console.error("Erro na requisição:", err);
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'Confirmar Agendamento';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
