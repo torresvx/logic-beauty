@@ -1,12 +1,19 @@
 {
   "name": "logic-beauty",
   "version": "1.0.0",
+<<<<<<< HEAD
+=======
+  "description": "Sistema para o Espaço Carol",
+>>>>>>> fc6a6b60ed2097f4da1a528c0deb0463a789a122
   "main": "index.js",
   "dependencies": {
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
+<<<<<<< HEAD
     "express-session": "^1.18.0",
+=======
+>>>>>>> fc6a6b60ed2097f4da1a528c0deb0463a789a122
     "mysql2": "^3.9.7",
     "node-cron": "^4.2.1",
     "nodemailer": "^8.0.4"

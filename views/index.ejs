@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     <title>Espaço Beauty</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -137,10 +138,54 @@
         .newsletter button:hover { background: #fff; color: var(--primary-dark); }
         
         .footer-bottom { margin-top: 80px; padding-top: 30px; border-top: 1px solid var(--accent-color); text-align: center; color: #ddd; font-size: 0.85rem; }
+=======
+    <title>Espaço Carol - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --lilas-pastel: #E0BBE4;
+            --roxo-pastel-medio: #D1B3FF;
+            --roxo-pastel-escuro: #B38BFF;
+            --off-white: #FDFDFD; 
+            --cinza-texto: #555;
+            --branco-puro: #FFFFFF;
+        }
+
+        body { font-family: 'Poppins', sans-serif; background: var(--off-white); margin: 0; color: var(--cinza-texto); text-align: center; display: flex; flex-direction: column; min-height: 100vh; }
+        
+        header { position: relative; background-image: url("fundo.jpg"); background-size: cover; background-position: center; padding: 100px 20px; color: var(--branco-puro); }
+        header::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(74, 20, 140, 0.3); z-index: 1; }
+        header > * { position: relative; z-index: 2; }
+
+        h1 { font-family: 'Playfair Display', serif; font-size: clamp(40px, 8vw, 85px); font-style: italic; color: var(--lilas-pastel); margin: 0; }
+
+        nav { background: var(--branco-puro); padding: 15px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-bottom: 2px solid var(--lilas-pastel); display: flex; justify-content: center; flex-wrap: wrap; }
+        nav a { text-decoration: none; color: #444; margin: 5px 15px; font-weight: 600; font-size: 14px; cursor: pointer; }
+        nav a:hover { color: var(--roxo-pastel-escuro); }
+
+        section { display: none; padding: 60px 20px; flex: 1; animation: fadeIn 0.5s ease; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .container-form { background: var(--branco-puro); max-width: 450px; margin: 0 auto; padding: 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid var(--lilas-pastel); }
+        .input-box { margin-bottom: 20px; text-align: left; }
+        input, select { width: 100%; padding: 12px; border: 1.5px solid #eee; border-radius: 10px; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        .checkbox-group { background: #fcf8ff; padding: 15px; border-radius: 10px; text-align: left; border: 1px solid #eee; }
+        .check-item { display: block; margin-bottom: 8px; font-size: 14px; }
+
+        .btn-acao { background: var(--roxo-pastel-medio); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 700; width: 100%; cursor: pointer; text-transform: uppercase; }
+        .btn-acao:hover { background: var(--roxo-pastel-escuro); }
+
+        footer { padding: 40px 20px; background: #f9f9f9; font-size: 11px; color: var(--roxo-pastel-escuro); font-weight: 700; border-top: 1px solid var(--lilas-pastel); }
+>>>>>>> fc6a6b60ed2097f4da1a528c0deb0463a789a122
     </style>
 </head>
 <body>
 
+<<<<<<< HEAD
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container-fluid px-lg-5">
             <a class="navbar-brand" href="/">Espaço Beauty</a>
@@ -296,10 +341,52 @@
                 </div>
                 
             </div>
+=======
+    <header>
+        <h1>Espaço Carol</h1>
+        <p>Estética & Bem-estar</p>
+    </header>
+
+    <nav>
+        <a onclick="mostrar('home')">INÍCIO</a>
+        <a href="/login">LOGIN / CADASTRO</a>
+        <a onclick="mostrar('agendar')">AGENDAR</a>
+    </nav>
+
+    <section id="home" class="active">
+        <h2>Onde a beleza encontra a lógica.</h2>
+        <p>Agende seu horário com praticidade.</p>
+        <img src="salao.jpeg" alt="Salão" style="width: 100%; max-width: 400px; border-radius: 20px; margin-top: 20px;">
+    </section>
+
+    <section id="agendar">
+        <div class="container-form">
+            <h2>Novo Agendamento</h2>
+            <form action="/agendar" method="POST">
+                <div class="input-box">
+                    <label>Data</label>
+                    <input type="date" name="data" required>
+                </div>
+                <div class="input-box">
+                    <label>Horário</label>
+                    <input type="time" name="hora" required>
+                </div>
+                <div class="input-box">
+                    <label>Procedimentos</label>
+                    <div class="checkbox-group">
+                        <label class="check-item"><input type="checkbox" name="procedimento" value="Corte"> Corte de Cabelo</label>
+                        <label class="check-item"><input type="checkbox" name="procedimento" value="Manicure"> Manicure</label>
+                        <label class="check-item"><input type="checkbox" name="procedimento" value="Escova"> Escova</label>
+                    </div>
+                </div>
+                <button type="submit" class="btn-acao">Confirmar Horário</button>
+            </form>
+>>>>>>> fc6a6b60ed2097f4da1a528c0deb0463a789a122
         </div>
     </section>
 
     <footer>
+<<<<<<< HEAD
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 mb-5 mb-lg-0">
@@ -349,6 +436,16 @@
                 navbar.style.boxShadow = 'none';
             }
         });
+=======
+        <span>&copy; 2026 ESPAÇO CAROL | Todos os direitos reservados.</span>
+    </footer>
+
+    <script>
+        function mostrar(id) {
+            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+>>>>>>> fc6a6b60ed2097f4da1a528c0deb0463a789a122
     </script>
 </body>
 </html>

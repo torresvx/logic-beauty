@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Horário - Espaço Carol</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --lilas-pastel: #E0BBE4;
+            --roxo-pastel-medio: #D1B3FF;
+            --roxo-pastel-escuro: #B38BFF;
+            --off-white: #FDFDFD;
+            --branco-puro: #FFFFFF;
+        }
+
+        body { font-family: 'Poppins', sans-serif; background: var(--off-white); margin: 0; padding-bottom: 50px; }
+
+        .container-edit {
+            max-width: 450px; margin: 80px auto; background: var(--branco-puro);
+            padding: 40px; border-radius: 30px; border-top: 6px solid var(--roxo-pastel-escuro);
+            box-shadow: 0 15px 40px rgba(224, 187, 228, 0.3);
+            text-align: center;
+        }
+
+        h2 { font-family: 'Playfair Display', serif; font-style: italic; color: var(--roxo-pastel-escuro); font-size: 32px; }
+
+        .form-group { text-align: left; margin-bottom: 20px; }
+        label { display: block; font-size: 13px; font-weight: 600; color: #888; margin-bottom: 8px; text-transform: uppercase; }
+        
+        input, select { width: 100%; padding: 14px; border: 1.5px solid #eee; border-radius: 12px; outline: none; box-sizing: border-box; }
+        input:focus { border-color: var(--roxo-pastel-medio); }
+
+        .btn-salvar { background: var(--roxo-pastel-medio); color: white; border: none; padding: 18px; border-radius: 15px; width: 100%; font-weight: 700; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .btn-salvar:hover { background: var(--roxo-pastel-escuro); transform: translateY(-2px); }
+        
+        .link-cancelar { display: block; margin-top: 20px; color: #bbb; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container-edit">
+        <h2>Ajustar Horário</h2>
+        <form action="/editar/<%= agendamento.id %>" method="POST">
+            <div class="form-group">
+                <label>Novo Procedimento</label>
+                <input type="text" name="procedimento" value="<%= agendamento.procedimento %>" required>
+            </div>
+            <div class="form-group">
+                <label>Nova Data</label>
+                <input type="date" name="data" value="<%= agendamento.data %>" required>
+            </div>
+            <div class="form-group">
+                <label>Novo Horário</label>
+                <input type="time" name="hora" value="<%= agendamento.hora %>" required>
+            </div>
+            <button type="submit" class="btn-salvar">Salvar Alterações</button>
+        </form>
+        <a href="/meus-agendamentos" class="link-cancelar">Voltar sem salvar</a>
+    </div>
+</body>
+</html>

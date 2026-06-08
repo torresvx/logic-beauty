@@ -2,6 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+<<<<<<< HEAD
     <title>Login - Espaço Beauty</title>
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -130,5 +131,94 @@
             document.getElementById(idMostrar).classList.add('active');
         }
     </script>
+=======
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso - Espaço Carol</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --lilas-pastel: #E0BBE4;
+            --roxo-pastel-medio: #D1B3FF;
+            --roxo-pastel-escuro: #B38BFF;
+            --off-white: #FDFDFD;
+            --branco-puro: #FFFFFF;
+        }
+
+        body { font-family: 'Poppins', sans-serif; background: var(--off-white); margin: 0; text-align: center; padding-bottom: 50px; }
+
+        header { background: var(--branco-puro); padding: 40px 20px; border-bottom: 2px solid var(--lilas-pastel); margin-bottom: 30px; }
+        h1 { font-family: 'Playfair Display', serif; font-size: 50px; font-style: italic; color: var(--roxo-pastel-escuro); margin: 0; }
+
+        .container { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; padding: 20px; }
+
+        .box { background: var(--branco-puro); padding: 30px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 350px; border-top: 5px solid var(--lilas-pastel); }
+        h2 { color: var(--roxo-pastel-escuro); margin-bottom: 20px; }
+
+        .input-group { text-align: left; margin-bottom: 15px; }
+        label { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; }
+        input { width: 100%; padding: 12px; border: 1.5px solid #eee; border-radius: 10px; box-sizing: border-box; outline: none; margin-top: 5px; }
+
+        .btn-submit { background: var(--roxo-pastel-medio); color: white; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: 700; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .btn-submit:hover { background: var(--roxo-pastel-escuro); transform: translateY(-2px); }
+
+        .btn-voltar { display: block; margin-top: 30px; text-decoration: none; color: #bbb; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Espaço Carol</h1>
+    </header>
+
+    <div class="container">
+        <div class="box">
+            <h2>Login</h2>
+            <form action="/login" method="POST">
+                <div class="input-group">
+                    <label>E-mail</label>
+                    <input type="email" name="usuario" placeholder="Seu e-mail" required>
+                </div>
+                <div class="input-group">
+                    <label>Senha</label>
+                    <input type="password" name="senha" placeholder="Sua senha" required>
+                </div>
+                <button type="submit" class="btn-submit">Entrar</button>
+            </form>
+        </div>
+
+        <!-- FORMULÁRIO DE CADASTRO -->
+        <div class="box">
+            <h2>Criar Conta</h2>
+            <form action="/cadastrar" method="POST">
+                <div class="input-group">
+                    <label>Nome Completo</label>
+                    <input type="text" name="nome" placeholder="Seu nome" required>
+                </div>
+                <div class="input-group">
+                    <label>E-mail</label>
+                    <input type="email" name="usuario" placeholder="Seu melhor e-mail" required>
+                </div>
+                <div class="input-group">
+                    <label>Telefone</label>
+                    <input type="text" name="telefone" placeholder="(11) 99999-9999" required>
+                </div>
+                <div class="input-group">
+                    <label>Nascimento</label>
+                    <input type="date" name="data_nascimento" required>
+                </div>
+                <div class="input-group">
+                    <label>Criar Senha</label>
+                    <input type="password" name="senha" placeholder="Crie uma senha" required>
+                </div>
+                <button type="submit" class="btn-submit">Cadastrar</button>
+            </form>
+        </div>
+    </div>
+
+    <a href="/" class="btn-voltar"><i class="fa fa-arrow-left"></i> Voltar ao Início</a>
+
+>>>>>>> fc6a6b60ed2097f4da1a528c0deb0463a789a122
 </body>
 </html>
