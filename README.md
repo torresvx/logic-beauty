@@ -43,5 +43,5 @@ Projeto desenvolvido em parceria acadêmica por:
 
 1. **Clonar o repositório:**
    ```bash
-   git clone [https://github.com/SEU_USUARIO/logic-beauty.git](https://github.com/SEU_USUARIO/logic-beauty.git)
+   git clone [https://github.com/torresvx/logic-beauty.git](https://github.com/torresvx/logic-beauty.git)
    cd logic-beauty
